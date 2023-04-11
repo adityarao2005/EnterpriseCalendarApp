@@ -6,7 +6,7 @@ This framework will have basic utilities:
  - Basic algorithms and Data structures
  - Basic Design patterns and interfaces
  - Wrapping IO
- - Basic Reflection
+ - Basic Reflection API
  - Creating Properties and Pseudo-Objects
  - Creating Object Templates
  - And more to come
