@@ -13,6 +13,8 @@ This framework will have basic utilities:
 
 All Data structures will be in the **com.raos.autocode.core.ds** package
  - These will be concrete classes which implement/extend certain required algorithms
+
 All Algorithms will be in the **com.raos.autocode.core.algorithm** package
  - These will either be abstract classes or interfaces which provides the utility
+ 
 All Design Patterns will be in the **com.raos.autocode.core.design** package
