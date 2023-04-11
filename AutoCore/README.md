@@ -1,4 +1,4 @@
-#AutoCode.AutoCore
+# AutoCode.AutoCore
 
 The Auto Code's Auto Core framework provides basic data structures, algorithms, and utilities that would be useful for project development as for other requirements for future API in the Auto Code framework.
 
