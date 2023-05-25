@@ -18,7 +18,7 @@ public class Tuple {
 	public <E> E get(int index) throws ClassCastException {
 		return (E) objs[index];
 	}
-	
+
 	// Hashcode
 	// Hashes each object
 	@Override
@@ -28,7 +28,7 @@ public class Tuple {
 		result = prime * result + Arrays.deepHashCode(objs);
 		return result;
 	}
-	
+
 	// Equals
 	// Checks whether the tuples are equal to each other
 	@Override
@@ -44,7 +44,7 @@ public class Tuple {
 		Tuple other = (Tuple) obj;
 		return Arrays.deepEquals(objs, other.objs);
 	}
-	
+
 	// Gets the length of the tuple
 	public int length() {
 		return objs.length;

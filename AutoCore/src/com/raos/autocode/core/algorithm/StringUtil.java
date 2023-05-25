@@ -3,33 +3,57 @@ package com.raos.autocode.core.algorithm;
 import java.util.LinkedList;
 import java.util.List;
 
-public interface StringUtil {
+import com.raos.autocode.core.annotations.ToDo;
 
+@ToDo(description = "Create, understand, and add the following functions to the String Util class", methods = { "prefixFunction", "kmpAlgorithm", "zAlgorithm" })
+// Provides some utilities for the string data type
+public interface StringUtil {
+	// Limit for hashing
+	public static long LIMIT = (long) 1e9 + 9;
+
+	// Hashes a string with given number as hasher
 	public static long hash(String str, int h) {
+		// Passes to overloaded method
 		return hash(str.toCharArray(), h);
 	}
 
-	public static long hash(char[] str, int h) {
-		long i = 0;
+	// Hashes a character array with a given number as hasher
+	public static long hash(char[] str, int p) {
+		// Creates the hash variable
+		long value = 0;
+		long pow = 1;
 
+		// For each character, hash the character
 		for (int j = 0; j < str.length; j++) {
-			i += str[j] * Math.pow(h, j);
+			// Hash each character
+			value = (value + str[j] * pow) % LIMIT;
+			pow = (pow * p) % LIMIT;
 		}
 
-		return i;
+		// Return hash
+		return value;
 	}
 
-	public static long hash(byte[] str, int h) {
-		long i = 0;
+	// Hashes a byte array with a given number as hasher
+	public static long hash(byte[] str, int p) {
+		// Creates the hash variable
+		long value = 0;
+		long pow = 1;
 
+		// For each character, hash the character
 		for (int j = 0; j < str.length; j++) {
-			i += str[j] * Math.pow(h, j);
+			// Hash each character
+			value = (value + str[j] * pow) % LIMIT;
+			pow = (pow * p) % LIMIT;
 		}
 
-		return i;
+		// Return hash
+		return value;
 	}
 
 	// Searches for a string using the Rabin-Karp Searching algorithm
+	// Searches in O(P + T) time where P is length of pattern and T is length of
+	// text
 	public static List<Integer> rabinKarpSearch(String pattern, String text, int hash) {
 		// If the length of the pattern is bigger than the text then there are no
 		// occurences
@@ -49,6 +73,8 @@ public interface StringUtil {
 		if (pHash == tHash)
 			list.add(0);
 
+		int pow = (int) Math.pow(hash, pattern.length() - 1);
+
 		// For every character after the substring
 		// Check for hashcode equality
 		for (int i = pattern.length(); i < text.length(); i++) {
@@ -57,7 +83,7 @@ public interface StringUtil {
 			// Divide everything by 31
 			tHash /= hash;
 			// Add the last character
-			tHash += text.charAt(i) * Math.pow(hash, pattern.length() - 1);
+			tHash = (tHash + text.charAt(i) * pow) % LIMIT;
 
 			// CHeck if hashes are the same
 			if (tHash == pHash)
@@ -68,5 +94,5 @@ public interface StringUtil {
 		return list;
 	}
 
-	
+
 }

@@ -3,6 +3,7 @@ package com.raos.autocode.core.algorithm;
 import java.util.Map;
 
 // An interface that represents the union-find algorithms for disjoint set
+@Deprecated
 public interface UnionFind<E> {
 
 	// The maps required by disjoint set
@@ -32,6 +33,8 @@ public interface UnionFind<E> {
 		sizes().put(e, 1);
 		ranks().put(e, 0);
 	}
+	
+	
 
 	// Find the roots and add the roots
 	default void unionRank(E a, E b) {

@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.raos.autocode.core.algorithm.Traversable;
-import com.raos.autocode.core.ds.Pair.Twin;
+import com.raos.autocode.core.util.Pair.Twin;
 
 // Graph theory introduced
 // Uses graph theory concepts to outline a graph object
 // Makes sure that I do not require nodes
 // Creates the graph theory Data Structure and Incorporates the Algorithm
 // This will be in the DS package since it contains the DS portion of it
+@Deprecated
 // It will implement the algorithm portion
 public class Graph<E> implements Traversable<E> {
 

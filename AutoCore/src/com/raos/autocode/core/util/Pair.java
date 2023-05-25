@@ -1,10 +1,11 @@
-package com.raos.autocode.core.ds;
+package com.raos.autocode.core.util;
 
 import java.util.Objects;
 import java.util.Set;
 
 // This class is much needed
 // Holds 2 objects that are somewhat related
+@Deprecated
 public class Pair<K, V> {
 
 	// The values in a pair
@@ -72,22 +73,26 @@ public class Pair<K, V> {
 		return "Pair [first=" + first + ", second=" + second + "]";
 	}
 
+	// A twin class to describe two identical values
 	public static class Twin<E> extends Pair<E, E> {
 
 		public Twin(E k, E v) {
 			super(k, v);
 		}
 
+		// Returns string value
 		@Override
 		public String toString() {
 			return "Twin [first=" + getFirst() + ", second=" + getSecond() + "]";
 		}
 
+		// Hashed based on the sets
 		@Override
 		public int hashCode() {
 			return Objects.hash(toSet());
 		}
 		
+		// Returns a set
 		public Set<E> toSet() {
 			return Set.of(getFirst(), getSecond());
 		}

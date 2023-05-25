@@ -9,10 +9,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.raos.autocode.core.ds.Graph;
-import com.raos.autocode.core.ds.Pair.Twin;
+import com.raos.autocode.core.util.Pair.Twin;
 
 // Tests the graph class
 //
+@Deprecated
 public class GraphTest {
 
 	public static void main(String[] args) {

@@ -16,10 +16,11 @@ import java.util.stream.Collectors;
 
 import com.raos.autocode.core.ds.DisjointSet;
 import com.raos.autocode.core.ds.Graph;
-import com.raos.autocode.core.ds.Pair.Twin;
+import com.raos.autocode.core.util.Pair.Twin;
 
 // Graph theory algorithms
 // Graph theory DS will implement these
+@Deprecated
 public interface Traversable<E> {
 
 	// Returns the adjacency list
