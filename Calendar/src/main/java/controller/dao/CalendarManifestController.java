@@ -4,17 +4,18 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.api.services.classroom.model.Course;
 import com.google.api.services.classroom.model.CourseWork;
+import com.google.api.services.classroom.model.StudentSubmission;
 
-import javafx.util.converter.LocalDateTimeStringConverter;
 import model.User;
 import model.events.Assignment;
 import model.events.RCalendar;
+import model.events.RTask;
 import model.events.Reminder;
 
 public class CalendarManifestController {
@@ -64,7 +65,18 @@ public class CalendarManifestController {
 				assignment.setReminder(LocalTime.MIDNIGHT);
 				assignment.setName(work.getTitle());
 				assignment.setSchedule(new ArrayList<>());
-				assignment.setCompleted(!GoogleConnectController.listStudentSubmission(user, work).isEmpty());
+
+				List<StudentSubmission> submissions = GoogleConnectController.listStudentSubmission(user, work);
+
+				if (submissions.isEmpty()) {
+
+					assignment.setCompleted(false);
+				} else {
+
+					StudentSubmission submission = submissions.get(0);
+
+					assignment.setCompleted(submission.getState().equals("TURNED_IN"));
+				}
 
 				// Add assignment to the calendar
 				calendar.getReminders().add(assignment);
@@ -73,21 +85,60 @@ public class CalendarManifestController {
 
 		}
 
-		// Loop through all the calendars
-		for (RCalendar calendar : user.getCalendars()) {
-			System.out.println("Work to do: " + calendar.getName());
+	}
 
-			for (Reminder reminder : calendar.getReminders()) {
-				if (reminder instanceof Assignment) {
-					Assignment assignment = (Assignment) reminder;
+	public static List<RTask> getUncompletedTasks(User user) {
+		// Create a container list
+		List<RTask> tasks = new ArrayList<>();
 
-					LocalDateTimeStringConverter dConverter = new LocalDateTimeStringConverter(FormatStyle.MEDIUM,
-							FormatStyle.SHORT);
+		// Go through the calendar and its reminder events
+		for (RCalendar cal : user.getCalendars()) {
 
-					System.out.printf("%s Due on %s%n", assignment.getName(), dConverter.toString(assignment.getDue()));
+			for (Reminder rem : cal.getReminders()) {
 
+				// If the reminder is a completeable reminder and its not yet complete then add
+				// the task to the list
+				if (rem instanceof RTask) {
+					RTask task = (RTask) rem;
+
+					if (!task.isCompleted()) {
+						tasks.add(task);
+					}
 				}
 			}
 		}
+
+		// Sort the tasks by their due date and return them
+		tasks.sort(Comparator.comparing(RTask::finishBy));
+
+		return tasks;
+	}
+
+	public static List<Assignment> getUnattendedAssignments(User user) {
+		// Create a container list
+		List<Assignment> tasks = new ArrayList<>();
+
+		// Go through the calendar and its reminder events
+		for (RCalendar cal : user.getCalendars()) {
+
+			for (Reminder rem : cal.getReminders()) {
+
+				// If the reminder is a completeable reminder and its not yet complete then add
+				// the task to the list
+				if (rem instanceof Assignment) {
+					Assignment task = (Assignment) rem;
+
+					if (!task.isCompleted() && task.getSchedule().isEmpty()) {
+						tasks.add(task);
+					}
+				}
+			}
+		}
+
+		// Sort the tasks by their due date and return them
+		tasks.sort(Comparator.comparing(Assignment::finishBy));
+
+		return tasks;
+
 	}
 }

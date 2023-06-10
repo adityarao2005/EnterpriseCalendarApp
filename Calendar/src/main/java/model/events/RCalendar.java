@@ -47,4 +47,9 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 	public boolean identical(RCalendar calendar) {
 		return calendar.name.equals(name);
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }

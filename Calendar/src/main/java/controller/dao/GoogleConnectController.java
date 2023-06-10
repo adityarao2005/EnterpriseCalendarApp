@@ -144,7 +144,7 @@ public class GoogleConnectController {
 
 		// List the first 10 courses that the user has access to.
 		ListStudentSubmissionsResponse response = user.getProfile().getClassroom().courses().courseWork()
-				.studentSubmissions().list(work.getCourseId(), work.getId()).execute();
+				.studentSubmissions().list(work.getCourseId(), work.getId()).setUserId("me").execute();
 
 		return response.getStudentSubmissions();
 	}

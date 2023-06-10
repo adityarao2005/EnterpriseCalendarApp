@@ -1,5 +1,6 @@
 package model.events;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public abstract class CompleteableReminder extends Reminder {
@@ -22,6 +23,13 @@ public abstract class CompleteableReminder extends Reminder {
 
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
+	}
+
+	public abstract LocalDateTime finishBy();
+
+	@Override
+	public String toString() {
+		return String.format("%s, completed=%b", super.toString(), completed);
 	}
 
 }

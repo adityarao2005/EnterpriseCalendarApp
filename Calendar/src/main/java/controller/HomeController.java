@@ -5,15 +5,25 @@ import java.util.ArrayList;
 import application.Application;
 import controller.dao.CalendarManifestController;
 import controller.dao.GoogleConnectController;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanPropertyBase;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.util.StringConverter;
 import model.User;
+import model.events.Assignment;
 import model.events.CompleteableReminder;
 import model.events.RCalendar;
+import model.events.RTask;
 import view.controls.CheckBoxDS;
 import view.controls.ScheduleViewController;
 import view.controls.UCalendar;
@@ -30,7 +40,10 @@ public class HomeController {
 	private ListView<CheckBoxDS<RCalendar>> calendars;
 
 	@FXML
-	private ListView<CompleteableReminder> todoList;
+	private ListView<RTask> todoList;
+
+	@FXML
+	private ListView<Assignment> assignmentsList;
 
 	@FXML
 	private ScheduleViewController scheduleController;
@@ -42,27 +55,10 @@ public class HomeController {
 
 	@FXML
 	private void initialize() {
-		// Get the current user
-		user = Application.getApplication().getCurrentUser();
+		onRefresh();
+	}
 
-		// initialize the users calendar list if there arent any
-		if (user.getCalendars() == null)
-			user.setCalendars(new ArrayList<>());
-
-		// activate the users google profile if available
-		if (user.getProfile() != null) {
-			try {
-				GoogleConnectController.retrieveClassroom(user);
-
-				CalendarManifestController.refreshGoogleCalendars(user);
-
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		// Create the controls
-
+	private void showCalendarList() {
 		// Create the change event for the calendar list listener
 		ListChangeListener<CheckBoxDS<RCalendar>> changeEvent = event -> {
 			if (event.wasRemoved())
@@ -77,7 +73,93 @@ public class HomeController {
 
 		calendars.setItems(oCalendars);
 		calendars.setCellFactory(CheckBoxListCell.forListView(CheckBoxDS::checkedProperty));
+	}
 
+	private void showWorkTodoList() {
+		// Set the items
+		todoList.setItems(FXCollections.observableList(CalendarManifestController.getUncompletedTasks(user)));
+
+		// Set the sell factory so that it acts as a wrapper for the tasks
+		todoList.setCellFactory(CheckBoxListCell.forListView(e -> {
+			return new SimpleBooleanProperty() {
+
+				@Override
+				public boolean get() {
+					return e.isCompleted();
+				}
+
+				@Override
+				public void set(boolean newValue) {
+					if (newValue) {
+						e.setCompleted(newValue);
+
+						Platform.runLater(() -> todoList.setItems(
+								FXCollections.observableList(CalendarManifestController.getUncompletedTasks(user))));
+					}
+				}
+
+			};
+
+			// Add a converter
+		}, new StringConverter<>() {
+			public String toString(RTask t) {
+				return t == null ? null : t.getName();
+			}
+
+			public RTask fromString(String string) {
+				return null;
+			}
+		}));
+
+	}
+
+	private void showAssignmentList() {
+		// Set the items
+		assignmentsList
+				.setItems(FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
+
+		// Set the cell factory
+		assignmentsList.setCellFactory(lv -> {
+			// Create a new list cell where instead of performing the toString on load, itll
+			// keep its name instead
+			ListCell<Assignment> cell = new ListCell<>() {
+				@Override
+				public void updateItem(Assignment item, boolean empty) {
+					super.updateItem(item, empty);
+
+					setText(item == null || empty ? "" : item.getName());
+				}
+			};
+
+			// Create a context/popup menu
+			ContextMenu contextMenu = new ContextMenu();
+
+			// Create and add a menu item
+			MenuItem editItem = new MenuItem();
+			editItem.textProperty().bind(Bindings.format("Schedule Tasks for %s", cell.itemProperty()));
+			editItem.setOnAction(event -> {
+				Assignment item = cell.getItem();
+
+				// TODO: Add code dialog for the creation of the item
+				// code to edit item...
+			});
+
+			// Add the item to the popup
+			contextMenu.getItems().add(editItem);
+
+			// Add a listener to the empty property so that when the listcell is not empty,
+			// we would show the popup menu
+			cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+				if (isNowEmpty) {
+					cell.setContextMenu(null);
+				} else {
+					cell.setContextMenu(contextMenu);
+				}
+			});
+
+			// Return the cell
+			return cell;
+		});
 	}
 
 	@FXML
@@ -104,12 +186,37 @@ public class HomeController {
 	}
 
 	@FXML
-	private void onRefresh() {
+	private void onCreateCal() {
 
 	}
 
 	@FXML
-	private void onCreateCal() {
+	private void onRefresh() {
+		// Get the current user
+		user = Application.getApplication().getCurrentUser();
 
+		// initialize the users calendar list if there arent any
+		if (user.getCalendars() == null)
+			user.setCalendars(new ArrayList<>());
+
+		// activate the users google profile if available
+		if (user.getProfile() != null) {
+			try {
+				GoogleConnectController.retrieveClassroom(user);
+
+				CalendarManifestController.refreshGoogleCalendars(user);
+
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		// Create the controls
+		showCalendarList();
+
+		showWorkTodoList();
+
+		showAssignmentList();
 	}
+
 }

@@ -48,4 +48,9 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		return this.getName().equals(other.getName());
 	}
 
+	@Override
+	public LocalDateTime finishBy() {
+		return due;
+	}
+
 }

@@ -2,10 +2,13 @@ package application;
 
 import java.util.List;
 
+import controller.DialogController;
 import controller.dao.FileDAOController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import model.User;
 
@@ -103,6 +106,36 @@ public class Application extends javafx.application.Application {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	// Navigates to a particular FXML view file
+	@SuppressWarnings("unchecked")
+	public <R> R dialog(String url, String title) {
+		try {
+			// Retrieves the container from the FXML file
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource(url));
+
+			DialogPane parent = loader.load();
+
+			// Create a new dialog
+			Dialog<R> dialog = new Dialog<>();
+			dialog.setDialogPane(parent);
+
+			dialog.setResultConverter(buttonType -> {
+				switch (buttonType.getButtonData()) {
+				case APPLY, OK_DONE, YES, FINISH, RIGHT:
+					return ((DialogController<R>) loader.getController()).getResult();
+				default:
+					return null;
+				}
+			});
+
+			return dialog.showAndWait().orElseGet(null);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	// Getters and Setters

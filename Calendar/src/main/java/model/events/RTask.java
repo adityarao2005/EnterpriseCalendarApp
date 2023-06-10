@@ -57,4 +57,9 @@ public class RTask extends CompleteableReminder {
 		this.skipped = skipped;
 	}
 
+	@Override
+	public LocalDateTime finishBy() {
+		return LocalDateTime.of(date, to);
+	}
+
 }

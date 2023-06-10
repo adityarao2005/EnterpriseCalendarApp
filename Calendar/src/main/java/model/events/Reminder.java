@@ -49,4 +49,9 @@ public abstract class Reminder implements Serializable {
 		this.calendar = calendar;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s [name=%s, reminder=%s, calendar=%s", this.getClass(), name, reminder, calendar);
+	}
+
 }
