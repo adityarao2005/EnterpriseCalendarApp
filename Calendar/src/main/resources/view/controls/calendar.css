@@ -1,0 +1,16 @@
+.-fx-calendar-cell-before {
+	-fx-background-color: rgb(255, 200 ,200);
+}
+
+.-fx-calendar-cell-after {
+	-fx-background-color: rgb(200, 255 ,200);	
+}
+
+.-fx-calendar-cell-selected {
+	-fx-background-color: rgb(210, 210, 210);
+	-fx-background-radius: 0;
+}
+
+.-fx-calendar-background {
+	-fx-background-color: rgb(225, 225, 255);
+}
