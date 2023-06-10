@@ -1,6 +1,7 @@
 package com.raos.autocode.core.test;
 
 import com.raos.autocode.core.annotations.ToDo;
+import com.raos.autocode.core.property.Pointer;
 
 @ToDo(description = "Add multithreading support including the management of locks", methods = "")
 public class ThreadTest {
@@ -10,6 +11,9 @@ public class ThreadTest {
 		// TESTING FOR WAITING AND RECIEVING
 		// ------------------------------------------------
 		// Threading test
+		
+		
+		
 		System.out.println("Hello World");
 
 		Object lock = new Object();
