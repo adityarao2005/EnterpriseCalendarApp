@@ -51,6 +51,8 @@ public class TaskSpecController implements EventSpecController {
 		task.setTo(endTimeSpinner.getValue());
 		task.setDate(datePicker.getValue());
 
+		// TODO: FIX STUFF, make sure from < to and that no other tasks intersect with
+		// each other
 		return task;
 	}
 

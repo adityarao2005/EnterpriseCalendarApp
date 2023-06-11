@@ -1,6 +1,8 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import application.Application;
 import controller.dao.CalendarManifestController;
@@ -95,6 +97,7 @@ public class HomeController {
 					if (newValue) {
 						e.setCompleted(newValue);
 
+						// Run this right after
 						Platform.runLater(() -> todoList.setItems(
 								FXCollections.observableList(CalendarManifestController.getUncompletedTasks(user))));
 					}
@@ -104,12 +107,17 @@ public class HomeController {
 
 			// Add a converter
 		}, new StringConverter<>() {
+			private Map<String, RTask> map = new HashMap<>();
+
 			public String toString(RTask t) {
+				if (t != null)
+					map.put(t.getName(), t);
+
 				return t == null ? null : t.getName();
 			}
 
 			public RTask fromString(String string) {
-				return null;
+				return map.get(string);
 			}
 		}));
 
@@ -203,7 +211,11 @@ public class HomeController {
 
 	@FXML
 	private void onManage() {
+		// Show a dialog
+		Application.getApplication().dialog("/view/EventModalView.fxml", "Manage Events");
 
+		// Refresh afterwards
+		onRefresh();
 	}
 
 	@FXML

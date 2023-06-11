@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.cell.TreeItemPropertyValueFactory?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-	prefWidth="600.0" xmlns="http://javafx.com/javafx/18"
-	xmlns:fx="http://javafx.com/fxml/1">
-	<padding>
-		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-	</padding>
-	<top>
-		<Label text="Events" BorderPane.alignment="CENTER_LEFT">
+<DialogPane prefHeight="553.0" prefWidth="602.0"
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="controller.EventManagementController">
+	<content>
+		<TreeTableView editable="false" showRoot="false"
+			fx:id="treeTableView">
+			<columns>
+				<TreeTableColumn prefWidth="75.0" text="Events">
+					<cellValueFactory>
+						<TreeItemPropertyValueFactory
+							property="name" />
+					</cellValueFactory>
+				</TreeTableColumn>
+				<TreeTableColumn prefWidth="75.0" text="Type"
+					fx:id="typeColumn" />
+				<TreeTableColumn prefWidth="75.0" text="Calendar"
+					fx:id="calendarColumn">
+					<cellValueFactory>
+						<TreeItemPropertyValueFactory
+							property="calendar" />
+					</cellValueFactory>
+				</TreeTableColumn>
+				<TreeTableColumn prefWidth="120.0"
+					text="Classroom Loaded" fx:id="classroomLoaded">
+					<cellValueFactory>
+						<TreeItemPropertyValueFactory
+							property="calendar" />
+					</cellValueFactory>
+				</TreeTableColumn>
+				<TreeTableColumn prefWidth="58.0" text="Delete"
+					fx:id="deleteColumn" />
+				<TreeTableColumn prefWidth="47.0" text="Edit"
+					fx:id="editColumn" />
+				<TreeTableColumn prefWidth="129.0"
+					text="Mark Completed" fx:id="completedColumn" />
+			</columns>
+		</TreeTableView>
+	</content>
+	<header>
+		<Label text="Events">
 			<font>
 				<Font name="Arial Bold" size="40.0" />
 			</font>
+			<padding>
+				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+			</padding>
 		</Label>
-	</top>
-	<bottom>
-		<ButtonBar prefHeight="40.0" prefWidth="200.0"
-			BorderPane.alignment="CENTER">
-			<buttons>
-				<Button mnemonicParsing="false" text="Create New Event" />
-			</buttons>
-		</ButtonBar>
-	</bottom>
-	<center>
-		<StackPane prefHeight="150.0" prefWidth="200.0"
-			BorderPane.alignment="CENTER">
-			<children>
-				<TreeTableView editable="false" prefHeight="200.0"
-					prefWidth="200.0" sortable="false">
-					<columns>
-						<TreeTableColumn prefWidth="75.0" text="Events" />
-						<TreeTableColumn prefWidth="75.0" text="Type" />
-						<TreeTableColumn prefWidth="75.0" text="Calendar" />
-						<TreeTableColumn prefWidth="120.0"
-							text="Classroom Loaded" />
-						<TreeTableColumn prefWidth="58.0" text="Delete" />
-						<TreeTableColumn prefWidth="47.0" text="Edit" />
-						<TreeTableColumn prefWidth="129.0"
-							text="Mark Completed" />
-					</columns>
-				</TreeTableView>
-			</children>
-		</StackPane>
-	</center>
-</BorderPane>
+	</header>
+	<buttonTypes>
+		<ButtonType fx:constant="OK" />
+	</buttonTypes>
+</DialogPane>
