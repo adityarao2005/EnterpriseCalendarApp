@@ -45,7 +45,7 @@ public class AssignmentSpecController implements EventSpecController {
 	@FXML
 	private void initialize() {
 		// Create a pop up dialog to create a task
-		tasksTable.setOnListAddRequestProperty(() -> createTaskFrom(new RTask()));
+		tasksTable.setOnListAddRequestProperty(() -> EventSpecController.createReminderFrom(new RTask()));
 
 		// Set cell factory
 		tasksTable.setCellFactory(view -> {
@@ -92,7 +92,5 @@ public class AssignmentSpecController implements EventSpecController {
 
 		return assignment;
 	}
-
-
 
 }

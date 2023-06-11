@@ -35,6 +35,7 @@ public class TaskSpecController implements EventSpecController {
 
 	@FXML
 	private void initialize() {
+
 		if (reminder != null) {
 			startTimeSpinner.getValueFactory().setValue(reminder.getFrom());
 			endTimeSpinner.getValueFactory().setValue(reminder.getTo());
@@ -51,65 +52,6 @@ public class TaskSpecController implements EventSpecController {
 		task.setDate(datePicker.getValue());
 
 		return task;
-	}
-
-	// Utility method to create a task
-	public static RTask createTaskFrom(RTask template) {
-		// Declare the task
-		RTask task = null;
-
-		// While the task is empty
-		while (task == null) {
-			// Get the task from the dialog
-			task = Application.getApplication().dialog("/view/EventModalView.fxml", "Create Task", clazz -> {
-				// Create a new Event modal controller of task
-				if (clazz == EventModalController.class) {
-					return new EventModalController(template);
-				}
-
-				try {
-					return clazz.getDeclaredConstructor().newInstance();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				}
-
-				return null;
-			});
-
-			// If the task is empty
-			if (task == null) {
-				// Get the errors if anyn
-				if (Application.getApplication().getErrors() != null) {
-
-					// Alert the user of the errors
-					Alert errorDialog = new Alert(AlertType.ERROR, "Error");
-
-					errorDialog.setHeaderText("You have the following errors: \n - "
-							+ Application.getApplication().getErrors().stream().collect(Collectors.joining("\n - ")));
-
-					// Make the user acknowledge
-					errorDialog.showAndWait().get();
-
-					// Set the errors back to null
-					Application.getApplication().setErrors(null);
-				} else // If no errors found, then the client must have closed or dismissed this dialog
-					return null;
-			}
-		}
-
-		// Set the task
-		return task;
-
 	}
 
 }

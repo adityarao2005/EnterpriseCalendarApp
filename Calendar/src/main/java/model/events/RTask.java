@@ -16,8 +16,8 @@ public class RTask extends CompleteableReminder {
 		super();
 	}
 
-	public RTask(String name, LocalTime reminder, LocalTime from, LocalTime to,
-			LocalDate date, boolean skipped, boolean completed) {
+	public RTask(String name, LocalTime reminder, LocalTime from, LocalTime to, LocalDate date, boolean skipped,
+			boolean completed) {
 		super(name, reminder, completed);
 		this.from = from;
 		this.to = to;
@@ -62,4 +62,8 @@ public class RTask extends CompleteableReminder {
 		return LocalDateTime.of(date, to);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s, from=%s, to=%s, date=%s, skipped=%b", super.toString(), from, to, date, skipped);
+	}
 }

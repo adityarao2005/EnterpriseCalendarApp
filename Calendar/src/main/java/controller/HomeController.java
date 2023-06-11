@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import application.Application;
 import controller.dao.CalendarManifestController;
 import controller.dao.GoogleConnectController;
+import controller.spec.EventSpecController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanPropertyBase;
@@ -24,6 +25,7 @@ import model.events.Assignment;
 import model.events.CompleteableReminder;
 import model.events.RCalendar;
 import model.events.RTask;
+import model.events.Reminder;
 import view.controls.CheckBoxDS;
 import view.controls.ScheduleViewController;
 import view.controls.UCalendar;
@@ -138,10 +140,21 @@ public class HomeController {
 			MenuItem editItem = new MenuItem();
 			editItem.textProperty().bind(Bindings.format("Schedule Tasks for %s", cell.itemProperty()));
 			editItem.setOnAction(event -> {
+				// Get the assignment
 				Assignment item = cell.getItem();
 
-				// TODO: Add code dialog for the creation of the item
-				// code to edit item...
+				// Get the new version
+				Assignment value = EventSpecController.createReminderFrom(item);
+				// If there is a version, copy it
+				if (value != null) {
+					// XXX: DEBUG TO SEE IF IT WORKS
+					System.out.println(item);
+//					item.from(value);
+
+				}
+				// Set the items
+				assignmentsList.setItems(
+						FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
 			});
 
 			// Add the item to the popup
@@ -177,7 +190,15 @@ public class HomeController {
 
 	@FXML
 	private void onCreateTask() {
+		// Get an instance from a modal
+		Reminder reminder = Application.getApplication().dialog("/view/EventModalView.fxml", "Create Event");
 
+		// Error check and add
+		if (reminder != null) {
+			// XXX: DEBUG TO SEE IF WORKS
+			System.out.println(reminder);
+//			reminder.getCalendar().getReminders().add(reminder);
+		}
 	}
 
 	@FXML

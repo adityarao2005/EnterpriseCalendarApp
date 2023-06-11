@@ -1,14 +1,17 @@
 package application;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import controller.DialogController;
 import controller.dao.FileDAOController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.User;
@@ -112,32 +115,8 @@ public class Application extends javafx.application.Application {
 	}
 
 	// Navigates to a particular FXML view file
-	@SuppressWarnings("unchecked")
 	public <R> R dialog(String url, String title) {
-		try {
-			// Retrieves the container from the FXML file
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource(url));
-
-			DialogPane parent = loader.load();
-
-			// Create a new dialog
-			Dialog<R> dialog = new Dialog<>();
-			dialog.setDialogPane(parent);
-
-			dialog.setResultConverter(buttonType -> {
-				switch (buttonType.getButtonData()) {
-				case APPLY, OK_DONE, YES, FINISH, RIGHT:
-					return ((DialogController<R>) loader.getController()).getResult();
-				default:
-					return null;
-				}
-			});
-
-			return dialog.showAndWait().orElseGet(null);
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return dialog(url, title, null);
 
 	}
 
@@ -149,23 +128,57 @@ public class Application extends javafx.application.Application {
 			FXMLLoader loader = new FXMLLoader(this.getClass().getResource(url));
 			loader.setControllerFactory(controllerFactory);
 
+			// Get the fxml value
 			DialogPane parent = loader.load();
 
 			// Create a new dialog
 			Dialog<R> dialog = new Dialog<>();
 			dialog.setDialogPane(parent);
 
+			// Create a result converter
 			dialog.setResultConverter(buttonType -> {
 				switch (buttonType.getButtonData()) {
-				case APPLY, OK_DONE, YES, FINISH, RIGHT:
+				case APPLY, OK_DONE, YES, FINISH, RIGHT: // If we are given the go-ahead then return whatever the fxml
+															// loader says
 					return ((DialogController<R>) loader.getController()).getResult();
-				default:
+				default: // Otherwise return null
 					return null;
 				}
 			});
 
-			return dialog.showAndWait().orElseGet(null);
+			// Create the result
+			R result;
 
+			// Do while loop to get result
+			do {
+				// Get result from dialog
+				result = dialog.showAndWait().orElseGet(null);
+
+				// If the result is null
+				if (result == null) {
+					// Get the errors if any
+					if (Application.getApplication().getErrors() != null) {
+
+						// Alert the user of the errors
+						Alert errorDialog = new Alert(AlertType.ERROR, "Error");
+
+						errorDialog.setHeaderText("You have the following errors: \n - " + Application.getApplication()
+								.getErrors().stream().collect(Collectors.joining("\n - ")));
+
+						// Make the user acknowledge
+						errorDialog.showAndWait().get();
+
+						// Set the errors back to null
+						Application.getApplication().setErrors(null);
+					} else // If no errors found, then the client must have closed or dismissed this dialog
+							// so return null
+						return null;
+				}
+				// Keep on performing this until we get a result
+			} while (result == null);
+
+			// Return the result
+			return result;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -27,6 +27,14 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		this.schedule = schedule;
 	}
 
+	public void from(Assignment assignment) {
+		this.setName(assignment.getName());
+		this.setReminder(assignment.getReminder());
+		this.setDue(assignment.getDue());
+		this.setCompleted(assignment.isCompleted());
+		this.setSchedule(assignment.getSchedule());
+	}
+
 	public LocalDateTime getDue() {
 		return due;
 	}
@@ -53,4 +61,8 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		return due;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s, due=%s, schedule=%s", super.toString(), due, schedule);
+	}
 }
