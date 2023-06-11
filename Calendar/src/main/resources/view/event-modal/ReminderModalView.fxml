@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,22 +16,22 @@
 <?import view.controls.ControlTable?>
 <?import view.controls.EnumCheckBoxCallback?>
 
-<fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity" maxWidth="-Infinity"
-	minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0"
-	prefWidth="580.0" spacing="10.0" xmlns="http://javafx.com/javafx/18"
-	xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity"
+	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="200.0" prefWidth="580.0" spacing="10.0"
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.spec.ReminderSpecController">
 	<fx:define>
 		<HBox fx:id="dailyOcc" />
 		<HBox prefWidth="200.0" spacing="10.0" fx:id="weeklyOcc">
 			<children>
-				<Label text="Chose Days:" />
+				<Label text="Choose Days:" />
 				<ListView>
 					<items>
 						<FXCollections fx:factory="observableArrayList"
 							EnumCheckBoxCallback.enumClass="java.time.DayOfWeek" />
 					</items>
 					<cellFactory>
-						<EnumCheckBoxCallBack
+						<EnumCheckBoxCallback fx:id="weeklyList"
 							enumType="java.time.DayOfWeek" />
 					</cellFactory>
 				</ListView>
@@ -42,8 +43,13 @@
 		</HBox>
 		<HBox prefWidth="200.0" spacing="10.0" fx:id="monthlyOcc">
 			<children>
-				<Label text="Chose Days:" />
-				<Spinner />
+				<Label text="Choose Days:" />
+				<Spinner fx:id="daysSpinnerM">
+					<valueFactory>
+						<IntegerSpinnerValueFactory min="1"
+							max="31" />
+					</valueFactory>
+				</Spinner>
 
 
 			</children>
@@ -54,8 +60,19 @@
 		<HBox prefWidth="200.0" spacing="10.0" fx:id="yearlyOcc">
 			<children>
 				<Label text="Chose Days:" />
-				<Spinner />
-				<ComboBox />
+				<Spinner fx:id="daysSpinnerY">
+					<valueFactory>
+						<IntegerSpinnerValueFactory min="1"
+							max="31" />
+					</valueFactory>
+				</Spinner>
+				<ComboBox fx:id="monthCombo">
+
+					<items>
+						<FXCollections fx:factory="observableArrayList"
+							EnumCheckBoxCallback.enumClass="java.time.Month" />
+					</items>
+				</ComboBox>
 
 
 			</children>
@@ -66,7 +83,7 @@
 		<HBox prefWidth="200.0" spacing="10.0" fx:id="onlyOcc">
 			<children>
 				<Label text="Chose Dates:" />
-				<DatePicker />
+				<DatePicker fx:id="datePicker" />
 
 
 			</children>
@@ -82,7 +99,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Time:" />
-				<Spinner editable="true">
+				<Spinner editable="true" fx:id="timeSpinner">
 					<valueFactory>
 						<TimeSpinnerValueFactory />
 					</valueFactory>
@@ -97,7 +114,16 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Frequency" />
-				<ComboBox prefWidth="150.0" />
+				<ComboBox prefWidth="150.0" fx:id="frequencyCombo"
+					onAction="#selectFreq">
+					<items>
+						<String fx:value="DAILY" />
+						<String fx:value="WEEKLY" />
+						<String fx:value="MONTHLY" />
+						<String fx:value="YEARLY" />
+						<String fx:value="ONLY" />
+					</items>
+				</ComboBox>
 			</children>
 			<VBox.margin>
 				<Insets />
@@ -106,14 +132,8 @@
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</padding>
 		</HBox>
-		<BorderPane prefHeight="200.0" prefWidth="200.0" />
-		<ButtonBar prefHeight="40.0" prefWidth="200.0">
-			<buttons>
-				<Button ButtonBar.buttonData="LEFT" mnemonicParsing="false"
-					text="Back" />
-				<Button mnemonicParsing="false" text="Apply" />
-			</buttons>
-		</ButtonBar>
+		<BorderPane prefHeight="200.0" prefWidth="200.0"
+			fx:id="container" />
 	</children>
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

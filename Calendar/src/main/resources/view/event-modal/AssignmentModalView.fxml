@@ -16,13 +16,13 @@
 <fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	prefHeight="200.0" prefWidth="580.0" spacing="10.0"
-	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:id="controller.spec.AssignmentSpecController">
 	<children>
 
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Due Time:" />
-				<Spinner editable="true">
+				<Spinner editable="true" fx:id="dueTimeSpinner">
 					<valueFactory>
 						<TimeSpinnerValueFactory />
 					</valueFactory>
@@ -36,7 +36,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Due Date: " />
-				<DatePicker prefWidth="150.0" />
+				<DatePicker prefWidth="150.0" fx:id="datePicker" />
 			</children>
 			<VBox.margin>
 				<Insets />
@@ -49,7 +49,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Tasks: " />
-				<ControlTable />
+				<ControlTable fx:id="tasksTable" />
 			</children>
 			<VBox.margin>
 				<Insets />
@@ -60,13 +60,6 @@
 		</HBox>
 
 
-		<ButtonBar prefHeight="40.0" prefWidth="200.0">
-			<buttons>
-				<Button ButtonBar.buttonData="LEFT" mnemonicParsing="false"
-					text="Back" />
-				<Button mnemonicParsing="false" text="Apply" />
-			</buttons>
-		</ButtonBar>
 	</children>
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

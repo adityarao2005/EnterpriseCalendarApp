@@ -15,13 +15,13 @@
 <fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	prefHeight="200.0" prefWidth="580.0" spacing="10.0"
-	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.spec.TaskSpecController">
 	<children>
 
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Start Time:" />
-				<Spinner editable="true">
+				<Spinner editable="true" fx:id="startTimeSpinner">
 					<valueFactory>
 						<TimeSpinnerValueFactory />
 					</valueFactory>
@@ -35,7 +35,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="End Time:" />
-				<Spinner editable="true">
+				<Spinner editable="true" fx:id="endTimeSpinner">
 					<valueFactory>
 						<TimeSpinnerValueFactory />
 					</valueFactory>
@@ -53,7 +53,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Date: " />
-				<DatePicker prefWidth="150.0" />
+				<DatePicker prefWidth="150.0" fx:id="datePicker" />
 			</children>
 			<VBox.margin>
 				<Insets />
@@ -62,13 +62,6 @@
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</padding>
 		</HBox>
-		<ButtonBar prefHeight="40.0" prefWidth="200.0">
-			<buttons>
-				<Button ButtonBar.buttonData="LEFT" mnemonicParsing="false"
-					text="Back" />
-				<Button mnemonicParsing="false" text="Apply" />
-			</buttons>
-		</ButtonBar>
 	</children>
 	<padding>
 		<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -77,7 +77,7 @@ public final class ControlTable<T> extends Control {
 		return onListRemoveRequest;
 	}
 
-	public final void setOnAction(Predicate<T> value) {
+	public final void setOnListRemoveRequest(Predicate<T> value) {
 		onListRemoveRequestProperty().set(value);
 	}
 
