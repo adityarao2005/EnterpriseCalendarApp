@@ -64,8 +64,9 @@ public class RegisterController {
 	private void requestGoogleSync(User user) {
 
 		// Ask the user whether he wants to link his google account
-		Alert alert = new Alert(AlertType.CONFIRMATION,
-				"Would you like to import assignments from your google classroom?", ButtonType.YES, ButtonType.NO);
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Confirm", ButtonType.YES, ButtonType.NO);
+
+		alert.setHeaderText("Would you like to import assignments from your google classroom?");
 		// Get the response
 		ButtonType buttonType = alert.showAndWait().get();
 

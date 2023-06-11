@@ -19,7 +19,7 @@
 <fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	prefHeight="200.0" prefWidth="580.0" spacing="10.0"
-	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.spec.ReminderSpecController">
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
 	<fx:define>
 		<HBox fx:id="dailyOcc" />
 		<HBox prefWidth="200.0" spacing="10.0" fx:id="weeklyOcc">

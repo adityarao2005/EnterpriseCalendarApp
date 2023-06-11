@@ -7,7 +7,10 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 import application.Application;
+import controller.spec.AssignmentSpecController;
 import controller.spec.EventSpecController;
+import controller.spec.ReminderSpecController;
+import controller.spec.TaskSpecController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +19,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import model.events.Assignment;
 import model.events.RCalendar;
+import model.events.REvent;
+import model.events.RTask;
 import model.events.Reminder;
 
 public class EventModalController implements DialogController<Reminder>, Initializable {
@@ -32,12 +38,51 @@ public class EventModalController implements DialogController<Reminder>, Initial
 	private VBox eventSpecBox;
 	private EventSpecController controller;
 
+	private Reminder reminder;
+
+	public EventModalController() {
+	}
+
+	public EventModalController(Reminder reminder) {
+		this.reminder = reminder;
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		calendarCombo.setItems(FXCollections.observableList(Application.getApplication().getCurrentUser().getCalendars()
 				.stream().filter(Predicate.not(RCalendar::isClassroomLoaded)).map(RCalendar::getName).toList()));
 
 		selectedType();
+
+		// Auto Fill the values and disable some other values
+		if (reminder != null) {
+			// If it is an assignment
+			if (reminder instanceof Assignment) {
+				// Select assignment
+				typeCombo.getSelectionModel().select("ASSIGNMENT");
+
+				// If it is classroom loaded, disable the name editing
+				if (((Assignment) reminder).getCalendar().isClassroomLoaded()) {
+					nameField.setEditable(false);
+				}
+
+				// If it is a task, select task
+			} else if (reminder instanceof RTask) {
+				typeCombo.getSelectionModel().select("TASK");
+			} else {
+				// If it is a reminder, select reminder
+				typeCombo.getSelectionModel().select("REMINDER");
+			}
+
+			// Auto fill name and reminder time
+			nameField.setText(reminder.getName());
+			reminderSpinner.getValueFactory().setValue(reminder.getReminder());
+
+			// Disable type and calendars
+			typeCombo.setDisable(true);
+			calendarCombo.setDisable(true);
+
+		}
 	}
 
 	@Override
@@ -61,18 +106,45 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		loader.setRoot(eventSpecBox);
 
 		switch (typeCombo.getSelectionModel().getSelectedItem()) {
-		case "REMINDER":
+		case "REMINDER": {
 			loader.setLocation(this.getClass().getResource("/view/event-modal/ReminderModalView.fxml"));
 
+			ReminderSpecController spec = new ReminderSpecController();
+
+			if (reminder == null) {
+				spec = new ReminderSpecController((REvent) reminder);
+			}
+
+			loader.setController(spec);
+
 			break;
-		case "TASK":
+		}
+		case "TASK": {
 			loader.setLocation(this.getClass().getResource("/view/event-modal/TaskModalView.fxml"));
 
-			break;
-		case "ASSIGNMENT":
-			loader.setLocation(this.getClass().getResource("/view/event-modal/AssignmentModalView.fxml"));
+			TaskSpecController spec = new TaskSpecController();
+
+			if (reminder == null) {
+				spec = new TaskSpecController((RTask) reminder);
+			}
+
+			loader.setController(spec);
 
 			break;
+		}
+		case "ASSIGNMENT": {
+			loader.setLocation(this.getClass().getResource("/view/event-modal/AssignmentModalView.fxml"));
+
+			AssignmentSpecController spec = new AssignmentSpecController();
+
+			if (reminder == null) {
+				spec = new AssignmentSpecController((Assignment) reminder);
+			}
+
+			loader.setController(spec);
+
+			break;
+		}
 		}
 
 		try {
@@ -80,7 +152,6 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		controller = loader.getController();
 	}
+
 }

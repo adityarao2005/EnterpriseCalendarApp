@@ -3,7 +3,9 @@ package controller.spec;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.EnumSet;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -59,9 +61,66 @@ public class ReminderSpecController implements EventSpecController {
 	@FXML
 	private BorderPane container;
 
+	private REvent reminder;
+
+	public ReminderSpecController() {
+	}
+
+	public ReminderSpecController(REvent reminder) {
+		this.reminder = reminder;
+	}
+
 	@FXML
 	private void initialize() {
 		selectFreq();
+
+		// Auto fill event if event is provided
+		if (reminder != null) {
+			// Auto fill values
+			timeSpinner.getValueFactory().setValue(reminder.getOccurence().getTime());
+
+			// Based on the occurrence of the event, auto fill the values and select the
+			// proper value
+			if (reminder.getOccurence() instanceof DailyOccurrence) {
+				// If it is daily select daily
+				frequencyCombo.getSelectionModel().select("DAILY");
+
+			} else if (reminder.getOccurence() instanceof WeeklyOccurrence) {
+				// if it is weekly select weekly
+				frequencyCombo.getSelectionModel().select("WEEKLY");
+
+				// Set the values of the enum set
+				for (DayOfWeek dayOfWeek : EnumSet.allOf(DayOfWeek.class)) {
+					// Set the values manually
+					((BooleanProperty) weeklyList.call(dayOfWeek))
+							.set(((WeeklyOccurrence) reminder.getOccurence()).getDaysOfWeek().contains(dayOfWeek));
+				}
+
+			} else if (reminder.getOccurence() instanceof MonthlyOccurrence) {
+				// If it is monthly select monthly
+				frequencyCombo.getSelectionModel().select("MONTHLY");
+
+				// Set the day value
+				daysSpinnerM.getValueFactory().setValue(((MonthlyOccurrence) reminder.getOccurence()).getDayOfMonth());
+
+			} else if (reminder.getOccurence() instanceof YearlyOccurrence) {
+				// If it is yearly set yearly
+				frequencyCombo.getSelectionModel().select("YEARLY");
+
+				// Set the month and day value
+				daysSpinnerY.getValueFactory().setValue(((YearlyOccurrence) reminder.getOccurence()).getDayOfMonth());
+				monthCombo.getSelectionModel().select((((YearlyOccurrence) reminder.getOccurence()).getMonth()));
+			} else {
+				// If it is only set only
+				frequencyCombo.getSelectionModel().select("ONLY");
+
+				// Set the date value
+				datePicker.setValue(((OnlyOccurrence) reminder.getOccurence()).getDate());
+			}
+
+			// Disable the combobox
+			frequencyCombo.setDisable(true);
+		}
 	}
 
 	@FXML

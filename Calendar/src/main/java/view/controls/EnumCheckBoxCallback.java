@@ -1,6 +1,8 @@
 package view.controls;
 
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.beans.NamedArg;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,25 +16,34 @@ public class EnumCheckBoxCallback<T extends Enum<T>> implements Callback<T, Obse
 	// Enum set to store the selected enums
 	private EnumSet<T> enums;
 
+	private Map<T, ObservableValue<Boolean>> selectedTypes = new HashMap<>();
+
 	// Creates a callback based on the enum type
 	@SuppressWarnings("unchecked")
 	public EnumCheckBoxCallback(@NamedArg("enumType") String enumType) throws Exception {
 		enums = EnumSet.noneOf((Class<T>) Class.forName(enumType));
+
+		for (T param : EnumSet.allOf((Class<T>) Class.forName(enumType))) {
+
+			// Create a boolean property which handles the delegation
+			SimpleBooleanProperty observable = new SimpleBooleanProperty();
+
+			observable.addListener((obs, wasSelected, isNowSelected) -> {
+				if (isNowSelected)
+					enums.add(param);
+				else
+					enums.remove(param);
+			});
+
+			selectedTypes.put(param, observable);
+		}
 	}
 
 	// The callback method
 	@Override
 	public ObservableValue<Boolean> call(T param) {
-		// Create a boolean property which handles the delegation
-		SimpleBooleanProperty observable = new SimpleBooleanProperty();
-		observable.addListener((obs, wasSelected, isNowSelected) -> {
-			if (isNowSelected)
-				enums.add(param);
-			else
-				enums.remove(param);
-		});
 
-		return observable;
+		return selectedTypes.get(param);
 	}
 
 	// Get the enum class from the list

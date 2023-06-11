@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.User;
 
 // Application class - deals and handles everything related to application level logic such as
@@ -26,6 +27,8 @@ public class Application extends javafx.application.Application {
 	private List<User> users;
 	// Store the current user
 	private User currentUser;
+
+	private List<String> errors;
 
 	// Constructor
 	public Application() {
@@ -136,6 +139,45 @@ public class Application extends javafx.application.Application {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	// Navigates to a particular FXML view file
+	@SuppressWarnings("unchecked")
+	public <R> R dialog(String url, String title, Callback<Class<?>, Object> controllerFactory) {
+		try {
+			// Retrieves the container from the FXML file
+			FXMLLoader loader = new FXMLLoader(this.getClass().getResource(url));
+			loader.setControllerFactory(controllerFactory);
+
+			DialogPane parent = loader.load();
+
+			// Create a new dialog
+			Dialog<R> dialog = new Dialog<>();
+			dialog.setDialogPane(parent);
+
+			dialog.setResultConverter(buttonType -> {
+				switch (buttonType.getButtonData()) {
+				case APPLY, OK_DONE, YES, FINISH, RIGHT:
+					return ((DialogController<R>) loader.getController()).getResult();
+				default:
+					return null;
+				}
+			});
+
+			return dialog.showAndWait().orElseGet(null);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<String> errors) {
+		this.errors = errors;
 	}
 
 	// Getters and Setters
