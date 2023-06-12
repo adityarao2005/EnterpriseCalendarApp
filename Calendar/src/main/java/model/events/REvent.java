@@ -1,7 +1,6 @@
 package model.events;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -52,6 +51,11 @@ public class REvent extends Reminder {
 	@Override
 	public boolean occursOn(LocalDate date) {
 		return occurence.occursOn(date);
+	}
+
+	@Override
+	public LocalTime appearsAt() {
+		return occurence.appearsAt();
 	}
 
 }

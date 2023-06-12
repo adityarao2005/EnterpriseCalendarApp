@@ -1,7 +1,6 @@
 
 package view.controls.skin;
 
-import view.controls.UCalendar;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,14 +10,12 @@ import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import view.controls.UCalendar;
 
 /**
  * The Default Skin of the Calendar object

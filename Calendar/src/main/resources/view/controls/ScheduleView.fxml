@@ -4,13 +4,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-	maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-	minWidth="-Infinity" AnchorPane.bottomAnchor="0"
-	AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" prefHeight="570"
-	prefWidth="600" AnchorPane.topAnchor="0"
-	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="view.controls.ScheduleViewController">
+<fx:root type="javafx.scene.control.ScrollPane"
+	fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity"
+	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+	prefHeight="570" prefWidth="600" xmlns="http://javafx.com/javafx/18"
+	xmlns:fx="http://javafx.com/fxml/1">
 
 	<content>
 		<VBox fx:id="scheduleContainer" fillWidth="true">
@@ -18,4 +16,4 @@
 	</content>
 
 
-</ScrollPane>
+</fx:root>

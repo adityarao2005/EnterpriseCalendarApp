@@ -1,23 +1,16 @@
 package controller.spec;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import application.Application;
-import controller.EventModalController;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.Spinner;
 import javafx.util.converter.LocalTimeStringConverter;
-import javafx.scene.control.Alert.AlertType;
 import model.events.Assignment;
 import model.events.RTask;
 import model.events.Reminder;
@@ -89,17 +82,17 @@ public class AssignmentSpecController implements EventSpecController {
 		Assignment assignment = new Assignment();
 
 		assignment.setDue(LocalDateTime.of(datePicker.getValue(), dueTimeSpinner.getValue()));
-		
+
 		assignment.setSchedule(new ArrayList<>(tasksTable.getItems()));
 
 		for (RTask task : assignment.getSchedule()) {
 			task.setAssignment(assignment);
 		}
-		
+
 		if (assignment.getDue().isBefore(LocalDateTime.now())) {
 			errors.add("The Due date of the assignment cannot be before today");
 		}
-		
+
 		if (assignment.getSchedule().isEmpty()) {
 			errors.add("The task schedule of the assignment cannot be empty");
 		}

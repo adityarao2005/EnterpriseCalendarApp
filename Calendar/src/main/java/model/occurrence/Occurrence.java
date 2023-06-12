@@ -1,7 +1,6 @@
 package model.occurrence;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -46,6 +45,10 @@ public abstract class Occurrence implements Serializable, Appearable {
 		Occurrence other = (Occurrence) obj;
 		return Objects.equals(time, other.time);
 	}
-	
+
+	@Override
+	public LocalTime appearsAt() {
+		return time;
+	}
 
 }

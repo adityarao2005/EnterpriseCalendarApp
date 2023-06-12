@@ -95,4 +95,9 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		return due.toLocalDate().equals(date);
 	}
 
+	@Override
+	public LocalTime appearsAt() {
+		return due.toLocalTime();
+	}
+
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import view.controls.UCalendar?>
+<?import view.controls.Scheduler?>
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -21,19 +22,10 @@
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Close" />
+						<MenuItem mnemonicParsing="false" text="Close"
+							onAction="#exitAction" />
 						<MenuItem mnemonicParsing="false"
 							onAction="#logoutAction" text="Log Out" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="Edit">
-					<items>
-						<MenuItem mnemonicParsing="false" text="Delete" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="Help">
-					<items>
-						<MenuItem mnemonicParsing="false" text="About" />
 					</items>
 				</Menu>
 			</menus>
@@ -94,8 +86,9 @@
 	</left>
 	<center>
 		<AnchorPane prefWidth="600" prefHeight="570">
-			<fx:include source="/view/controls/ScheduleView.fxml"
-				fx:id="schedule" />
+			<Scheduler fx:id="schedule" AnchorPane.bottomAnchor="0"
+				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+				AnchorPane.topAnchor="0" />
 		</AnchorPane>
 
 	</center>

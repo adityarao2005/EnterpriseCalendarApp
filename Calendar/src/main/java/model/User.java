@@ -1,10 +1,10 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.classroom.Classroom;
 
 import model.events.RCalendar;
@@ -18,7 +18,7 @@ public class User implements Serializable {
 	private String name;
 	private String password;
 	private GoogleProfile profile;
-	private List<RCalendar> calendars;
+	private List<RCalendar> calendars = new ArrayList<>(List.of(new RCalendar("DEFAULT")));
 
 	// Constructors
 	public User() {

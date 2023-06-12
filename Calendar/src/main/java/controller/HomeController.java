@@ -11,7 +11,6 @@ import controller.dao.GoogleConnectController;
 import controller.spec.EventSpecController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanPropertyBase;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -26,12 +25,11 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 import model.User;
 import model.events.Assignment;
-import model.events.CompleteableReminder;
 import model.events.RCalendar;
 import model.events.RTask;
 import model.events.Reminder;
 import view.controls.CheckBoxDS;
-import view.controls.ScheduleViewController;
+import view.controls.Scheduler;
 import view.controls.UCalendar;
 
 public class HomeController {
@@ -52,7 +50,7 @@ public class HomeController {
 	private ListView<Assignment> assignmentsList;
 
 	@FXML
-	private ScheduleViewController scheduleController;
+	private Scheduler schedule;
 
 	private User user;
 
@@ -157,9 +155,7 @@ public class HomeController {
 				Assignment value = EventSpecController.createReminderFrom(item);
 				// If there is a version, copy it
 				if (value != null) {
-					// XXX: DEBUG TO SEE IF IT WORKS
-					System.out.println(item);
-//					item.from(value);
+					item.from(value);
 
 				}
 				// Set the items
@@ -194,13 +190,24 @@ public class HomeController {
 	}
 
 	@FXML
+	private void exitAction() {
+		// Exit the application
+		Platform.exit();
+
+		// Close the program
+		System.exit(0);
+	}
+
+	@FXML
 	private void dateSelected() {
 
 		// Get the list of tasks
-		List<Reminder> tasks = Application.getApplication().getCurrentUser().getCalendars().stream().map(RCalendar::getReminders)
-				.flatMap(List::stream).filter(e -> e.occursOn(dayChooser.getCurrentDate())).toList();
-		
-		
+		List<Reminder> tasks = Application.getApplication().getCurrentUser().getCalendars().stream()
+				.map(RCalendar::getReminders).flatMap(List::stream).filter(e -> e.occursOn(dayChooser.getCurrentDate()))
+				.toList();
+
+		// Set the reminders
+		schedule.getReminder().addAll(tasks);
 	}
 
 	@FXML
@@ -208,11 +215,9 @@ public class HomeController {
 		// Get an instance from a modal
 		Reminder reminder = Application.getApplication().dialog("/view/EventModalView.fxml", "Create Event");
 
-		// Error check and add
+		// add
 		if (reminder != null) {
-			// XXX: DEBUG TO SEE IF WORKS
-			System.out.println(reminder);
-//			reminder.getCalendar().getReminders().add(reminder);
+			reminder.getCalendar().getReminders().add(reminder);
 		}
 	}
 

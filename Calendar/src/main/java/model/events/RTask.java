@@ -115,4 +115,9 @@ public class RTask extends CompleteableReminder {
 		return date.equals(this.date);
 	}
 
+	@Override
+	public LocalTime appearsAt() {
+		return from;
+	}
+
 }

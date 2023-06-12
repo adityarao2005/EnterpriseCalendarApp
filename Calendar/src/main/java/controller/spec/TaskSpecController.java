@@ -1,20 +1,14 @@
 package controller.spec;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import application.Application;
-import controller.EventModalController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
-import javafx.util.converter.LocalDateStringConverter;
 import javafx.util.converter.LocalTimeStringConverter;
-import javafx.scene.control.Alert.AlertType;
 import model.events.RCalendar;
 import model.events.RTask;
 import model.events.Reminder;
