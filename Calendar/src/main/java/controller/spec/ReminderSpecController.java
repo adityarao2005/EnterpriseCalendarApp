@@ -1,9 +1,13 @@
 package controller.spec;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.YearMonth;
 import java.util.EnumSet;
+import java.util.List;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.fxml.FXML;
@@ -142,17 +146,40 @@ public class ReminderSpecController implements EventSpecController {
 	}
 
 	@Override
-	public Reminder createReminder() {
+	public Reminder createReminder(List<String> errors) {
 
 		REvent event = new REvent();
 
 		event.setOccurence(switch (frequencyCombo.getSelectionModel().getSelectedItem()) {
 		case "DAILY" -> new DailyOccurrence(timeSpinner.getValue());
-		case "WEEKLY" -> new WeeklyOccurrence(timeSpinner.getValue(), weeklyList.getEnums());
-		case "MONTHLY" -> new MonthlyOccurrence(timeSpinner.getValue(), daysSpinnerM.getValue());
-		case "YEARLY" -> new YearlyOccurrence(timeSpinner.getValue(), daysSpinnerY.getValue(),
-				monthCombo.getSelectionModel().getSelectedItem());
-		case "ONLY" -> new OnlyOccurrence(timeSpinner.getValue(), datePicker.getValue());
+		case "WEEKLY" -> {
+			if (weeklyList.getEnums().isEmpty())
+				errors.add("There have to be days chosen");
+
+			yield new WeeklyOccurrence(timeSpinner.getValue(), weeklyList.getEnums());
+		}
+		case "MONTHLY" -> {
+			if (daysSpinnerM.getValue() < 1 || daysSpinnerM.getValue() > 31)
+				errors.add("The maximum number of days in a month is 31 and the minimum day is 1");
+
+			yield new MonthlyOccurrence(timeSpinner.getValue(), daysSpinnerM.getValue());
+		}
+		case "YEARLY" -> {
+
+			if (YearMonth.of(2000, monthCombo.getValue().getValue()).lengthOfMonth() < daysSpinnerY.getValue()
+					|| daysSpinnerY.getValue() < 0)
+				errors.add(String.format("The maximum number of days in %s is %d and the minimum day is 1",
+						monthCombo.getValue(), YearMonth.of(2000, monthCombo.getValue().getValue()).lengthOfMonth()));
+
+			yield new YearlyOccurrence(timeSpinner.getValue(), daysSpinnerY.getValue(),
+					monthCombo.getSelectionModel().getSelectedItem());
+		}
+		case "ONLY" -> {
+			if (!LocalDateTime.of(datePicker.getValue(), timeSpinner.getValue()).isAfter(LocalDateTime.now()))
+				errors.add("The occurrence of this event must occur after right now");
+
+			yield new OnlyOccurrence(timeSpinner.getValue(), datePicker.getValue());
+		}
 		default -> throw new IllegalArgumentException(
 				"Unexpected value: " + frequencyCombo.getSelectionModel().getSelectedItem());
 		});

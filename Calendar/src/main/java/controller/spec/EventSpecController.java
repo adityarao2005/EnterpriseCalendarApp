@@ -1,20 +1,14 @@
 package controller.spec;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.stream.Collectors;
-
-import javax.management.RuntimeErrorException;
+import java.util.List;
 
 import application.Application;
 import controller.EventModalController;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import model.events.Assignment;
 import model.events.Reminder;
 
 public interface EventSpecController {
 
-	public Reminder createReminder();
+	public Reminder createReminder(List<String> errors);
 
 	// Utility method to create a task
 	public static <T extends Reminder> T createReminderFrom(T template) {

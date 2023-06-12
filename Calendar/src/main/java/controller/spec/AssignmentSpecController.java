@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import application.Application;
@@ -83,12 +84,25 @@ public class AssignmentSpecController implements EventSpecController {
 	}
 
 	@Override
-	public Reminder createReminder() {
+	public Reminder createReminder(List<String> errors) {
 
 		Assignment assignment = new Assignment();
 
 		assignment.setDue(LocalDateTime.of(datePicker.getValue(), dueTimeSpinner.getValue()));
+		
 		assignment.setSchedule(new ArrayList<>(tasksTable.getItems()));
+
+		for (RTask task : assignment.getSchedule()) {
+			task.setAssignment(assignment);
+		}
+		
+		if (assignment.getDue().isBefore(LocalDateTime.now())) {
+			errors.add("The Due date of the assignment cannot be before today");
+		}
+		
+		if (assignment.getSchedule().isEmpty()) {
+			errors.add("The task schedule of the assignment cannot be empty");
+		}
 
 		return assignment;
 	}

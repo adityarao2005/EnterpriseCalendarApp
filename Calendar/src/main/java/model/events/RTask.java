@@ -3,6 +3,7 @@ package model.events;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class RTask extends CompleteableReminder {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +12,7 @@ public class RTask extends CompleteableReminder {
 	private LocalTime to;
 	private LocalDate date;
 	private boolean skipped;
+	private Assignment assignment;
 
 	public RTask() {
 		super();
@@ -23,6 +25,18 @@ public class RTask extends CompleteableReminder {
 		this.to = to;
 		this.date = date;
 		this.skipped = skipped;
+	}
+
+	@Override
+	public void from(Reminder reminder) {
+		super.from(reminder);
+
+		RTask assignment = (RTask) reminder;
+
+		this.from = assignment.from;
+		this.to = assignment.to;
+		this.date = assignment.date;
+		this.assignment = assignment.assignment;
 	}
 
 	public LocalTime getFrom() {
@@ -66,4 +80,39 @@ public class RTask extends CompleteableReminder {
 	public String toString() {
 		return String.format("%s, from=%s, to=%s, date=%s, skipped=%b", super.toString(), from, to, date, skipped);
 	}
+
+	public Assignment getAssignment() {
+		return assignment;
+	}
+
+	public void setAssignment(Assignment assignment) {
+		this.assignment = assignment;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(assignment, date, from, skipped, to);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RTask other = (RTask) obj;
+		return Objects.equals(assignment, other.assignment) && Objects.equals(date, other.date)
+				&& Objects.equals(from, other.from) && skipped == other.skipped && Objects.equals(to, other.to);
+	}
+
+	@Override
+	public boolean occursOn(LocalDate date) {
+		return date.equals(this.date);
+	}
+
 }

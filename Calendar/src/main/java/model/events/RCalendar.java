@@ -2,6 +2,7 @@ package model.events;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import model.Analogous;
 
@@ -52,4 +53,23 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 	public String toString() {
 		return name;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(classroomLoaded, name, reminders);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RCalendar other = (RCalendar) obj;
+		return classroomLoaded == other.classroomLoaded && Objects.equals(name, other.name)
+				&& Objects.equals(reminders, other.reminders);
+	}
+
 }

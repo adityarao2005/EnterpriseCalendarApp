@@ -3,6 +3,8 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -88,14 +90,29 @@ public class EventModalController implements DialogController<Reminder>, Initial
 	@Override
 	public Reminder getResult() {
 
-		Reminder reminder = controller.createReminder();
+		List<String> errors = new ArrayList<>();
+
+		Reminder reminder = controller.createReminder(errors);
 
 		reminder.setCalendar(Application.getApplication().getCurrentUser().getCalendars().stream()
 				.filter(e -> e.getName().equals(calendarCombo.getSelectionModel().getSelectedItem())).findFirst()
 				.get());
 
 		reminder.setName(nameField.getText());
+
+		if (reminder.getName().trim().isEmpty())
+			errors.add("Name cannot be empty");
+
 		reminder.setReminder(reminderSpinner.getValue());
+
+		if (reminder.getReminder() == null)
+			errors.add("Reminder Time cannot be null/empty");
+
+		// If there are errors, return null and set errors
+		if (errors.size() > 0) {
+			Application.getApplication().setErrors(errors);
+			return null;
+		}
 
 		return reminder;
 	}

@@ -1,8 +1,10 @@
 package model.events;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 import model.Analogous;
 
@@ -27,12 +29,14 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		this.schedule = schedule;
 	}
 
-	public void from(Assignment assignment) {
-		this.setName(assignment.getName());
-		this.setReminder(assignment.getReminder());
-		this.setDue(assignment.getDue());
-		this.setCompleted(assignment.isCompleted());
-		this.setSchedule(assignment.getSchedule());
+	@Override
+	public void from(Reminder reminder) {
+		super.from(reminder);
+
+		Assignment assignment = (Assignment) reminder;
+
+		this.due = assignment.due;
+		this.schedule = assignment.schedule;
 	}
 
 	public LocalDateTime getDue() {
@@ -65,4 +69,30 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 	public String toString() {
 		return String.format("%s, due=%s, schedule=%s", super.toString(), due, schedule);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(due, schedule);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Assignment other = (Assignment) obj;
+		return Objects.equals(due, other.due) && Objects.equals(schedule, other.schedule);
+	}
+
+	@Override
+	public boolean occursOn(LocalDate date) {
+		return due.toLocalDate().equals(date);
+	}
+
 }

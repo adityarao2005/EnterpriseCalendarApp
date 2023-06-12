@@ -1,11 +1,13 @@
 package model.occurrence;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.Objects;
 
 public class YearlyOccurrence extends Occurrence {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int dayOfMonth;
 	private Month month;
 
@@ -33,6 +35,31 @@ public class YearlyOccurrence extends Occurrence {
 
 	public void setMonth(Month month) {
 		this.month = month;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(dayOfMonth, month);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		YearlyOccurrence other = (YearlyOccurrence) obj;
+		return dayOfMonth == other.dayOfMonth && month == other.month;
+	}
+
+	@Override
+	public boolean occursOn(LocalDate date) {
+		return dayOfMonth == date.getDayOfMonth() && month.equals(date.getMonth());
 	}
 
 }

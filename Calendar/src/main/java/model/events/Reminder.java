@@ -1,11 +1,13 @@
 package model.events;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 // Generic Reminder Superclass
-public abstract class Reminder implements Serializable {
+public abstract class Reminder implements Serializable, Appearable {
 	private static final long serialVersionUID = 1L;
 	// Fields
 	private String name;
@@ -22,6 +24,12 @@ public abstract class Reminder implements Serializable {
 		super();
 		this.name = name;
 		this.reminder = reminder;
+	}
+
+	public void from(Reminder reminder) {
+		this.name = reminder.name;
+		this.reminder = reminder.reminder;
+		this.calendar = reminder.calendar;
 	}
 
 	// Getters and Setters
@@ -52,6 +60,24 @@ public abstract class Reminder implements Serializable {
 	@Override
 	public String toString() {
 		return String.format("%s [name=%s, reminder=%s, calendar=%s", this.getClass(), name, reminder, calendar);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(calendar, name, reminder);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reminder other = (Reminder) obj;
+		return Objects.equals(calendar, other.calendar) && Objects.equals(name, other.name)
+				&& Objects.equals(reminder, other.reminder);
 	}
 
 }

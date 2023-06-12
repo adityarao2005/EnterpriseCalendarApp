@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import application.Application;
@@ -20,6 +21,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 import model.User;
@@ -194,6 +196,11 @@ public class HomeController {
 	@FXML
 	private void dateSelected() {
 
+		// Get the list of tasks
+		List<Reminder> tasks = Application.getApplication().getCurrentUser().getCalendars().stream().map(RCalendar::getReminders)
+				.flatMap(List::stream).filter(e -> e.occursOn(dayChooser.getCurrentDate())).toList();
+		
+		
 	}
 
 	@FXML
@@ -220,6 +227,20 @@ public class HomeController {
 
 	@FXML
 	private void onCreateCal() {
+		// Create a text input dialog
+		TextInputDialog dialog = new TextInputDialog();
+
+		dialog.setHeaderText("What is the name of this calendar?");
+
+		// Show it and get result
+		String name = dialog.showAndWait().orElseGet(null);
+
+		// If the result is not null
+		if (name != null) {
+
+			// Create and add the calendar
+			user.getCalendars().add(new RCalendar(name));
+		}
 
 	}
 

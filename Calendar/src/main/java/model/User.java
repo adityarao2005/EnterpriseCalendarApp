@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.classroom.Classroom;
@@ -71,6 +72,23 @@ public class User implements Serializable {
 			return "GoogleProfile [token=" + token + ", classroom=" + classroom + "]";
 		}
 
+		@Override
+		public int hashCode() {
+			return Objects.hash(token);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			GoogleProfile other = (GoogleProfile) obj;
+			return Objects.equals(token, other.token);
+		}
+
 	}
 
 	// Getters and setters
@@ -118,6 +136,25 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [username=" + username + ", name=" + name + ", password=" + password + ", profile=" + profile
 				+ ", calendars=" + calendars + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(calendars, name, password, profile, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(calendars, other.calendars) && Objects.equals(name, other.name)
+				&& Objects.equals(password, other.password) && Objects.equals(profile, other.profile)
+				&& Objects.equals(username, other.username);
 	}
 
 }
