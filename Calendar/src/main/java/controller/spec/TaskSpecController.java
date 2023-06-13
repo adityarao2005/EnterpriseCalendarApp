@@ -3,12 +3,14 @@ package controller.spec;
 import java.time.LocalTime;
 import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.stream.Stream;
 
 import application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.util.converter.LocalTimeStringConverter;
+import model.events.Assignment;
 import model.events.RCalendar;
 import model.events.RTask;
 import model.events.Reminder;
@@ -24,12 +26,14 @@ public class TaskSpecController implements EventSpecController {
 	private DatePicker datePicker;
 
 	private RTask reminder;
+	private List<RTask> otherTasks;
 
 	public TaskSpecController() {
 	}
 
-	public TaskSpecController(RTask reminder) {
+	public TaskSpecController(RTask reminder, List<RTask> otherTasks) {
 		this.reminder = reminder;
+		this.otherTasks = otherTasks;
 	}
 
 	@FXML
@@ -50,15 +54,22 @@ public class TaskSpecController implements EventSpecController {
 		task.setTo(endTimeSpinner.getValue());
 		task.setDate(datePicker.getValue());
 
-		// TODO: FIX STUFF, make sure from < to and that no other tasks intersect with
-		// each other
 		if (!task.getFrom().isBefore(task.getTo())) {
 			errors.add("The start time must be before the end time");
+			return task;
 		}
 
+		// Get the total amount of reminders
+		List<Reminder> totalReminders = Application.getApplication().getCurrentUser().getCalendars().stream()
+				.map(RCalendar::getReminders).flatMap(List::stream).toList();
+
 		// Get the list of tasks
-		List<RTask> tasks = Application.getApplication().getCurrentUser().getCalendars().stream()
-				.map(RCalendar::getReminders).flatMap(List::stream).filter(e -> e instanceof RTask).map(e -> (RTask) e)
+		List<RTask> tasks = Stream.concat(
+				// 
+				totalReminders.stream().filter(e -> e instanceof Assignment).map(e -> ((Assignment) e).getSchedule())
+						.flatMap(List::stream),
+				Stream.concat(totalReminders.stream().filter(e -> e instanceof RTask).map(e -> (RTask) e),
+						otherTasks.stream()))
 				.toList();
 
 		// Loop through all the tasks and check for intersection

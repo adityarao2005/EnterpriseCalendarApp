@@ -30,7 +30,6 @@ import com.google.api.services.classroom.model.StudentSubmission;
 
 import model.User;
 import model.User.GoogleProfile;
-import test.ClassroomQuickstart;
 
 // Handles Google authentication
 public class GoogleConnectController {
@@ -61,7 +60,7 @@ public class GoogleConnectController {
 	static {
 		try {
 			// Load google client secrets
-			InputStream in = ClassroomQuickstart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+			InputStream in = GoogleConnectController.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 
 			// Error checking
 			if (in == null) {

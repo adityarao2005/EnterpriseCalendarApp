@@ -104,6 +104,12 @@ public class CalendarManifestController {
 					if (!task.isCompleted()) {
 						tasks.add(task);
 					}
+				} else if (rem instanceof Assignment assignment) {
+					for (RTask task : assignment.getSchedule()) {
+						if (!task.isCompleted()) {
+							tasks.add(task);
+						}
+					}
 				}
 			}
 		}

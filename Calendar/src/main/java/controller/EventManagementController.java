@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 import application.Application;
 import controller.spec.EventSpecController;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +15,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import model.events.Assignment;
@@ -27,6 +27,11 @@ import model.events.RTask;
 import model.events.Reminder;
 
 public class EventManagementController implements DialogController<String> {
+
+	private static final Image TRASH = new Image(
+			EventManagementController.class.getResourceAsStream("/images/trash.png"));
+	private static final Image EDIT = new Image(
+			EventManagementController.class.getResourceAsStream("/images/edit-solid.png"));
 
 	@FXML
 	private TreeTableView<Reminder> treeTableView;
@@ -52,7 +57,7 @@ public class EventManagementController implements DialogController<String> {
 	// Root node
 	private TreeItem<Reminder> root;
 
-	private EventManagementController() {
+	public EventManagementController() {
 	}
 
 	@FXML
@@ -107,13 +112,13 @@ public class EventManagementController implements DialogController<String> {
 		deleteColumn.setCellValueFactory(v -> v.getValue().valueProperty());
 
 		// Set cell factory for delete column view
-		deleteColumn.setCellFactory(v -> new ImageIconTTC(FontAwesomeIcon.TRASH, this::deleteReminder));
+		deleteColumn.setCellFactory(v -> new ImageIconTTC(TRASH, this::deleteReminder));
 
 		// Set the icon so that its any value
 		editColumn.setCellValueFactory(v -> v.getValue().valueProperty());
 
 		// Set cell factory for delete column view
-		editColumn.setCellFactory(v -> new ImageIconTTC(FontAwesomeIcon.TRASH, this::editReminder));
+		editColumn.setCellFactory(v -> new ImageIconTTC(EDIT, this::editReminder));
 
 		// Set the value of the treetablecolumn
 		completedColumn.setCellValueFactory(v -> v.getValue().valueProperty());
@@ -160,28 +165,29 @@ public class EventManagementController implements DialogController<String> {
 		// Get an instance from a modal
 		Reminder reminder = Application.getApplication().dialog("/view/EventModalView.fxml", "Create Event");
 
-		// Error check and add
+		// add
 		if (reminder != null) {
-			// XXX: DEBUG TO SEE IF WORKS
-			System.out.println(reminder);
-//			reminder.getCalendar().getReminders().add(reminder);
+			reminder.getCalendar().getReminders().add(reminder);
 		}
 	}
 
 	private void deleteReminder(Reminder reminder) {
-		if (reminder.getCalendar() == null) {
-			// XXX: DEBUG TO SEE IF WORKS
-			System.out.println(reminder);
-//			((RTask) reminder).getAssignment().getSchedule().remove(reminder);
+		System.out.println(reminder);
+
+		if (reminder instanceof RTask && ((RTask) reminder).getAssignment() != null) {
+			((RTask) reminder).getAssignment().getSchedule().remove(reminder);
 		} else {
-			// XXX: DEBUG TO SEE IF WORKS
-			System.out.println(reminder);
 			reminder.getCalendar().getReminders().remove(reminder);
 		}
 	}
 
 	private void editReminder(Reminder reminder) {
-		reminder.from(EventSpecController.createReminderFrom(reminder));
+
+		List<RTask> otherTasks = (reminder instanceof RTask && ((RTask) reminder).getAssignment() != null)
+				? ((RTask) reminder).getAssignment().getSchedule()
+				: List.of();
+
+		reminder.from(EventSpecController.createReminderFrom(reminder, otherTasks));
 	}
 
 	// Not needed but good to have since this is acting as a dialog
@@ -195,10 +201,17 @@ public class EventManagementController implements DialogController<String> {
 		private Button button;
 		private Reminder lastItem;
 
-		public ImageIconTTC(FontAwesomeIcon icon, Consumer<Reminder> handler) {
-			button = new Button("", new FontAwesomeIconView(icon));
+		public ImageIconTTC(Image icon, Consumer<Reminder> handler) {
+			ImageView image = new ImageView(icon);
+			button = new Button();
+
+			image.setPreserveRatio(true);
+			image.setFitHeight(20);
+
+			button.setGraphic(image);
+
+			HBox.setHgrow(button, Priority.NEVER);
 			hbox.getChildren().addAll(button);
-			HBox.setHgrow(button, Priority.ALWAYS);
 			button.setOnAction(v -> handler.accept(lastItem));
 		}
 
@@ -244,6 +257,8 @@ public class EventManagementController implements DialogController<String> {
 			} else {
 				lastItem = item;
 				setGraphic(hbox);
+
+				button.setSelected(((CompleteableReminder) item).isCompleted());
 
 				if (item.getCalendar() != null && item.getCalendar().isClassroomLoaded()) {
 					button.setDisable(true);

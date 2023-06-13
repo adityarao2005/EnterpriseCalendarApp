@@ -7,7 +7,7 @@
 <fx:root type="javafx.scene.control.ScrollPane"
 	fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-	prefHeight="570" prefWidth="600" xmlns="http://javafx.com/javafx/18"
+	prefHeight="570" prefWidth="620" xmlns="http://javafx.com/javafx/18"
 	xmlns:fx="http://javafx.com/fxml/1">
 
 	<content>

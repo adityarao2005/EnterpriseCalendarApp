@@ -76,6 +76,6 @@
 		</Label>
 	</header>
 	<buttonTypes>
-		<ButtonType fx:constant="OK" />
+		<ButtonType fx:constant="CLOSE" />
 	</buttonTypes>
 </DialogPane>

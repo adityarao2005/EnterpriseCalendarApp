@@ -75,6 +75,8 @@ public class ReminderSpecController implements EventSpecController {
 
 	@FXML
 	private void initialize() {
+		frequencyCombo.getSelectionModel().select(0);
+
 		selectFreq();
 
 		// Auto fill event if event is provided
@@ -129,7 +131,7 @@ public class ReminderSpecController implements EventSpecController {
 	@FXML
 	private void selectFreq() {
 		// Get the right hbox
-		HBox hbox = (switch (frequencyCombo.getSelectionModel().getSelectedItem()) {
+		HBox hbox = (switch (frequencyCombo.getValue()) {
 		case "DAILY" -> dailyOcc;
 		case "WEEKLY" -> weeklyOcc;
 		case "MONTHLY" -> monthlyOcc;

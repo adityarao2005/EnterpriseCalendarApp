@@ -6,6 +6,8 @@ import com.google.common.base.Predicate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ObjectPropertyBase;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
@@ -15,7 +17,6 @@ import javafx.scene.control.Skin;
 import javafx.util.Callback;
 import view.controls.skin.ControlTableSkin;
 
-// XXX: Still got to check if this works
 public final class ControlTable<T> extends Control {
 
 	// Represents the items of the list
@@ -123,6 +124,20 @@ public final class ControlTable<T> extends Control {
 
 	public void setCellFactory(Callback<ListView<T>, ListCell<T>> cellFactory) {
 		this.cellFactory.set(cellFactory);
+	}
+
+	private final StringProperty title = new SimpleStringProperty(this, "title", "Title");
+
+	public StringProperty titleProperty() {
+		return title;
+	}
+
+	public String getTitle() {
+		return titleProperty().get();
+	}
+
+	public void setTitle(String title) {
+		titleProperty().set(title);
 	}
 
 	// Creates a default skin

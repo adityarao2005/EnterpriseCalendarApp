@@ -20,9 +20,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.converter.LocalTimeStringConverter;
 import model.events.Reminder;
 
@@ -104,11 +106,11 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 	}
 
 	public static class TaskCell extends ListCell<Reminder> {
-		private HBox hbox;
+		private HBox hbox = new HBox();
 		@FXML
-		private Label nameField;
+		private Label nameLabel;
 		@FXML
-		private Label timeField;
+		private Label timeLabel;
 
 		public TaskCell() {
 			FXMLLoader loader = new FXMLLoader();
@@ -134,8 +136,8 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 			} else {
 
 				// Show the task view
-				nameField.setText(item.getName());
-				timeField.setText(new LocalTimeStringConverter(FormatStyle.SHORT).toString(item.appearsAt()));
+				nameLabel.setText(item.getName());
+				timeLabel.setText(new LocalTimeStringConverter(FormatStyle.SHORT).toString(item.appearsAt()));
 
 				setGraphic(hbox);
 			}

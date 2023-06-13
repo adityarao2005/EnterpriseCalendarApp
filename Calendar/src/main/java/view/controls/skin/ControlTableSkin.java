@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import view.controls.ControlTable;
@@ -13,14 +14,19 @@ public class ControlTableSkin<T> extends FXRootSkinBase<ControlTable<T>, BorderP
 	@FXML
 	private ListView<T> view;
 
+	@FXML
+	private Label titleLabel;
+
 	public ControlTableSkin(ControlTable<T> e) {
-		super(e, ControlTableSkin.class.getResource("/view/controls/CalendarView.fxml"), BorderPane::new);
+		super(e, ControlTableSkin.class.getResource("/view/controls/ControlTable.fxml"), BorderPane::new);
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		view.itemsProperty().bind(this.getSkinnable().itemsProperty());
 		view.cellFactoryProperty().bind(this.getSkinnable().cellFactoryProperty());
+
+		titleLabel.textProperty().bind(this.getSkinnable().titleProperty());
 	}
 
 	public ObservableList<T> getItems() {

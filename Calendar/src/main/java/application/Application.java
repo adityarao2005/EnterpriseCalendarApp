@@ -42,8 +42,6 @@ public class Application extends javafx.application.Application {
 	// Initializes application - handles all the data loading
 	@Override
 	public void init() throws Exception {
-		// XXX DEBUG:
-		System.out.println("Init");
 
 		// Load users
 		users = FileDAOController.readUsers();
@@ -55,8 +53,6 @@ public class Application extends javafx.application.Application {
 	// Starts the application - Passes the main window
 	@Override
 	public void start(Stage primaryStage) {
-		// XXX DEBUG:
-		System.out.println("Starting");
 
 		// Set the main window
 		this.primaryStage = primaryStage;
@@ -77,8 +73,6 @@ public class Application extends javafx.application.Application {
 		// Write the current user
 		FileDAOController.writeCurrentUser(currentUser);
 
-		// XXX DEBUG:
-		System.out.println("Stopping");
 	}
 
 	// Shows the initial view
@@ -137,13 +131,17 @@ public class Application extends javafx.application.Application {
 
 			// Create a result converter
 			dialog.setResultConverter(buttonType -> {
-				switch (buttonType.getButtonData()) {
-				case APPLY, OK_DONE, YES, FINISH, RIGHT: // If we are given the go-ahead then return whatever the fxml
-															// loader says
-					return ((DialogController<R>) loader.getController()).getResult();
-				default: // Otherwise return null
-					return null;
-				}
+
+				R result = switch (buttonType.getButtonData()) {
+				// If we are given the go-ahead then return whatever the fxml
+				// loader says
+				case APPLY, OK_DONE, YES, FINISH, RIGHT -> ((DialogController<R>) loader.getController()).getResult();
+				default -> null;
+				};
+
+				System.out.println(buttonType + " : " + result);
+
+				return result;
 			});
 
 			// Create the result
@@ -152,24 +150,28 @@ public class Application extends javafx.application.Application {
 			// Do while loop to get result
 			do {
 				// Get result from dialog
-				result = dialog.showAndWait().orElseGet(null);
+				result = dialog.showAndWait().orElse(null);
+
+				System.out.println(result);
 
 				// If the result is null
 				if (result == null) {
 					// Get the errors if any
-					if (Application.getApplication().getErrors() != null) {
+					if (getErrors() != null) {
+
+						System.out.println(getErrors());
 
 						// Alert the user of the errors
 						Alert errorDialog = new Alert(AlertType.ERROR, "Error");
 
-						errorDialog.setHeaderText("You have the following errors: \n - " + Application.getApplication()
-								.getErrors().stream().collect(Collectors.joining("\n - ")));
+						errorDialog.setHeaderText("You have the following errors: \n - "
+								+ getErrors().stream().collect(Collectors.joining("\n - ")));
 
 						// Make the user acknowledge
-						errorDialog.showAndWait().get();
+						errorDialog.showAndWait();
 
 						// Set the errors back to null
-						Application.getApplication().setErrors(null);
+						setErrors(null);
 					} else // If no errors found, then the client must have closed or dismissed this dialog
 							// so return null
 						return null;

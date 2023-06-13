@@ -1,6 +1,7 @@
 package model.events;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	private List<Reminder> reminders;
+	private List<Reminder> reminders = new ArrayList<>();
 	private boolean classroomLoaded;
 
 	public RCalendar() {

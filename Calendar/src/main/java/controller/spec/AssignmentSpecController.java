@@ -39,7 +39,8 @@ public class AssignmentSpecController implements EventSpecController {
 	@FXML
 	private void initialize() {
 		// Create a pop up dialog to create a task
-		tasksTable.setOnListAddRequestProperty(() -> EventSpecController.createReminderFrom(new RTask()));
+		tasksTable.setOnListAddRequestProperty(
+				() -> EventSpecController.createReminderFrom(new RTask(), tasksTable.getItems()));
 
 		// Set cell factory
 		tasksTable.setCellFactory(view -> {
@@ -69,6 +70,9 @@ public class AssignmentSpecController implements EventSpecController {
 				dueTimeSpinner.setDisable(true);
 
 			}
+
+			datePicker.setValue(assignment.getDue().toLocalDate());
+			dueTimeSpinner.getValueFactory().setValue(assignment.getDue().toLocalTime());
 
 			// Auto fill items
 			tasksTable.getItems().addAll(assignment.getSchedule());

@@ -11,12 +11,12 @@ public interface EventSpecController {
 	public Reminder createReminder(List<String> errors);
 
 	// Utility method to create a task
-	public static <T extends Reminder> T createReminderFrom(T template) {
+	public static <T extends Reminder> T createReminderFrom(T template, Object... otherData) {
 		// Create an event dialog
 		return Application.getApplication().dialog("/view/EventModalView.fxml", "Create Event", clazz -> {
 			// Create a new Event modal controller of task
 			if (clazz == EventModalController.class) {
-				return new EventModalController(template);
+				return new EventModalController(template, otherData);
 			}
 
 			// Create a regular instance

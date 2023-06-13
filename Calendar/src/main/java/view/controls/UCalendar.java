@@ -79,6 +79,7 @@ public final class UCalendar extends Control {
 		this.currentDateProperty().set(currentDate);
 	}
 
-	private final ObjectProperty<LocalDate> currentDate = new SimpleObjectProperty<>(this, "currentDate");
+	private final ObjectProperty<LocalDate> currentDate = new SimpleObjectProperty<>(this, "currentDate",
+			LocalDate.now());
 
 }

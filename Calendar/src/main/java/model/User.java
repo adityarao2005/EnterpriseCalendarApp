@@ -22,7 +22,6 @@ public class User implements Serializable {
 
 	// Constructors
 	public User() {
-
 	}
 
 	public User(String username, String name, String password, GoogleProfile profile) {

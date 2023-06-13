@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import application.Application;
 import controller.dao.CalendarManifestController;
@@ -72,11 +73,20 @@ public class HomeController {
 		};
 
 		// Create the observable list proxy and add the items
-		oCalendars = FXCollections.observableArrayList(user.getCalendars().stream().map(CheckBoxDS::new).toList());
+		oCalendars = FXCollections.observableArrayList(user.getCalendars().stream().map(CheckBoxDS::new).filter(e -> {
+
+			// Just to add the listener while we are at it
+			e.checkedProperty().addListener(l -> dateSelected());
+
+			// Always return true
+			return true;
+		}).toList());
+
 		oCalendars.addListener(changeEvent);
 
 		calendars.setItems(oCalendars);
 		calendars.setCellFactory(CheckBoxListCell.forListView(CheckBoxDS::checkedProperty));
+
 	}
 
 	private void showWorkTodoList() {
@@ -146,7 +156,6 @@ public class HomeController {
 
 			// Create and add a menu item
 			MenuItem editItem = new MenuItem();
-			editItem.textProperty().bind(Bindings.format("Schedule Tasks for %s", cell.itemProperty()));
 			editItem.setOnAction(event -> {
 				// Get the assignment
 				Assignment item = cell.getItem();
@@ -161,6 +170,9 @@ public class HomeController {
 				// Set the items
 				assignmentsList.setItems(
 						FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
+
+				// Refresh
+				onRefresh();
 			});
 
 			// Add the item to the popup
@@ -172,6 +184,9 @@ public class HomeController {
 				if (isNowEmpty) {
 					cell.setContextMenu(null);
 				} else {
+
+					editItem.setText(String.format("Schedule Tasks for %s", cell.getItem().getName()));
+
 					cell.setContextMenu(contextMenu);
 				}
 			});
@@ -201,13 +216,25 @@ public class HomeController {
 	@FXML
 	private void dateSelected() {
 
-		// Get the list of tasks
-		List<Reminder> tasks = Application.getApplication().getCurrentUser().getCalendars().stream()
-				.map(RCalendar::getReminders).flatMap(List::stream).filter(e -> e.occursOn(dayChooser.getCurrentDate()))
-				.toList();
+		Platform.runLater(() -> {
+			// Get the list of tasks
+			List<Reminder> tasks = oCalendars.stream().filter(CheckBoxDS::getChecked).map(CheckBoxDS::getValue)
+					.map(RCalendar::getReminders).flatMap(List::stream).toList();
 
-		// Set the reminders
-		schedule.getReminder().addAll(tasks);
+			List<Reminder> totalTasks = Stream
+					.concat(tasks.stream(), tasks.stream().filter(e -> e instanceof Assignment)
+							.map(e -> ((Assignment) e).getSchedule()).flatMap(List::stream))
+					.toList();
+
+			// Set the reminders
+			List<Reminder> reminders = totalTasks.stream().filter(e -> e.occursOn(dayChooser.getCurrentDate()))
+					.toList();
+			System.out.println(dayChooser.getCurrentDate());
+			System.out.println(reminders);
+
+			schedule.getReminder().clear();
+			schedule.getReminder().addAll(reminders);
+		});
 	}
 
 	@FXML
@@ -219,12 +246,14 @@ public class HomeController {
 		if (reminder != null) {
 			reminder.getCalendar().getReminders().add(reminder);
 		}
+
+		onRefresh();
 	}
 
 	@FXML
 	private void onManage() {
 		// Show a dialog
-		Application.getApplication().dialog("/view/EventModalView.fxml", "Manage Events");
+		Application.getApplication().dialog("/view/EventManagement.fxml", "Manage Events");
 
 		// Refresh afterwards
 		onRefresh();
@@ -247,6 +276,7 @@ public class HomeController {
 			user.getCalendars().add(new RCalendar(name));
 		}
 
+		onRefresh();
 	}
 
 	@FXML
@@ -276,6 +306,8 @@ public class HomeController {
 		showWorkTodoList();
 
 		showAssignmentList();
+
+		dateSelected();
 	}
 
 }

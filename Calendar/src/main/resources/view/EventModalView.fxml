@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DialogPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ButtonType?>
 
-<?import view.controls.TimeSpinnerValueFactory?>
+<?import java.lang.*?>
+<?import java.time.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.*?>
+
+<?import model.*?>
+<?import model.events.*?>
+<?import model.occurrence.*?>
+
+<?import view.controls.*?>
 
 
 <DialogPane xmlns="http://javafx.com/javafx/18"
@@ -28,24 +27,15 @@
 				<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 					<children>
 						<Label text="Type of Event:" />
-						<ComboBox prefWidth="150.0" fx:id="typeCombo"
-							onAction="#selectedType">
+						<ComboBox prefWidth="150.0" fx:id="typeCombo">
 							<items>
-								<String fx:value="REMINDER" />
-								<String fx:value="TASK" />
-								<String fx:value="ASSIGNMENT" />
+								<FXCollections fx:factory="observableArrayList">
+									<String fx:value="REMINDER" />
+									<String fx:value="TASK" />
+									<String fx:value="ASSIGNMENT" />
+								</FXCollections>
 							</items>
 						</ComboBox>
-					</children>
-					<VBox.margin>
-						<Insets />
-					</VBox.margin>
-					<padding>
-						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-					</padding>
-				</HBox>
-				<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
-					<children>
 						<Label text="Calendar:" />
 						<ComboBox prefWidth="150.0" fx:id="calendarCombo" />
 					</children>
@@ -60,16 +50,6 @@
 					<children>
 						<Label text="Name of Event:" />
 						<TextField promptText="Enter the Name" fx:id="nameField" />
-					</children>
-					<VBox.margin>
-						<Insets />
-					</VBox.margin>
-					<padding>
-						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-					</padding>
-				</HBox>
-				<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
-					<children>
 						<Label text="Reminder Time:" />
 						<Spinner editable="true" fx:id="reminderSpinner">
 							<valueFactory>
@@ -85,10 +65,8 @@
 						<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 					</padding>
 				</HBox>
-				<BorderPane prefHeight="200.0" prefWidth="200.0">
-					<center>
-						<VBox fx:id="eventSpecBox" />
-					</center>
+				<BorderPane prefHeight="200.0" prefWidth="200.0"
+					fx:id="eventSpecBox">
 				</BorderPane>
 			</children>
 			<padding>
@@ -107,7 +85,7 @@
 		</Label>
 	</header>
 	<buttonTypes>
-		<ButtonType buttonData="LEFT" text="Back" />
+		<ButtonType buttonData="CANCEL_CLOSE" text="Back" />
 		<ButtonType fx:constant="APPLY" />
 
 	</buttonTypes>

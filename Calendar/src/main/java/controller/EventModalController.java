@@ -20,6 +20,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.events.Assignment;
 import model.events.RCalendar;
@@ -37,16 +39,18 @@ public class EventModalController implements DialogController<Reminder>, Initial
 	@FXML
 	private Spinner<LocalTime> reminderSpinner;
 	@FXML
-	private VBox eventSpecBox;
+	private BorderPane eventSpecBox;
 	private EventSpecController controller;
 
 	private Reminder reminder;
+	private Object[] otherData;
 
 	public EventModalController() {
 	}
 
-	public EventModalController(Reminder reminder) {
+	public EventModalController(Reminder reminder, Object... otherData) {
 		this.reminder = reminder;
+		this.otherData = otherData;
 	}
 
 	@Override
@@ -54,13 +58,20 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		calendarCombo.setItems(FXCollections.observableList(Application.getApplication().getCurrentUser().getCalendars()
 				.stream().filter(Predicate.not(RCalendar::isClassroomLoaded)).map(RCalendar::getName).toList()));
 
-		selectedType();
+		// Add a selection listener
+		typeCombo.getSelectionModel().selectedItemProperty().addListener(l -> selectedType());
+
+		calendarCombo.setValue(null);
 
 		// Auto Fill the values and disable some other values
 		if (reminder != null) {
+			// Set value
+			if (reminder.getCalendar() != null)
+				calendarCombo.getSelectionModel().select(reminder.getCalendar().getName());
+
 			// If it is an assignment
 			if (reminder instanceof Assignment) {
-				// Select assignment
+
 				typeCombo.getSelectionModel().select("ASSIGNMENT");
 
 				// If it is classroom loaded, disable the name editing
@@ -94,15 +105,18 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 		Reminder reminder = controller.createReminder(errors);
 
+		// Set the calendar
 		reminder.setCalendar(Application.getApplication().getCurrentUser().getCalendars().stream()
 				.filter(e -> e.getName().equals(calendarCombo.getSelectionModel().getSelectedItem())).findFirst()
-				.get());
+				.orElse(null));
 
+		// Set the calendar
 		reminder.setName(nameField.getText());
 
 		if (reminder.getName().trim().isEmpty())
 			errors.add("Name cannot be empty");
 
+		// Set the reminder
 		reminder.setReminder(reminderSpinner.getValue());
 
 		if (reminder.getReminder() == null)
@@ -117,10 +131,12 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		return reminder;
 	}
 
+	@SuppressWarnings("unchecked")
 	@FXML
 	private void selectedType() {
+
 		FXMLLoader loader = new FXMLLoader();
-		loader.setRoot(eventSpecBox);
+		loader.setRoot(new VBox());
 
 		switch (typeCombo.getSelectionModel().getSelectedItem()) {
 		case "REMINDER": {
@@ -128,7 +144,7 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 			ReminderSpecController spec = new ReminderSpecController();
 
-			if (reminder == null) {
+			if (reminder != null) {
 				spec = new ReminderSpecController((REvent) reminder);
 			}
 
@@ -141,8 +157,8 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 			TaskSpecController spec = new TaskSpecController();
 
-			if (reminder == null) {
-				spec = new TaskSpecController((RTask) reminder);
+			if (reminder != null) {
+				spec = new TaskSpecController((RTask) reminder, (List<RTask>) otherData[0]);
 			}
 
 			loader.setController(spec);
@@ -154,7 +170,7 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 			AssignmentSpecController spec = new AssignmentSpecController();
 
-			if (reminder == null) {
+			if (reminder != null) {
 				spec = new AssignmentSpecController((Assignment) reminder);
 			}
 
@@ -165,10 +181,12 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		}
 
 		try {
-			loader.load();
+			eventSpecBox.setCenter(loader.load());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		controller = loader.getController();
 	}
 
 }

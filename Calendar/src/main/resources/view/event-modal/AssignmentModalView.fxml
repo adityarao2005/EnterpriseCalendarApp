@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import view.controls.ControlTable?>
 
-<?import view.controls.TimeSpinnerValueFactory?>
+<?import java.lang.*?>
+<?import java.time.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+
+<?import model.*?>
+<?import model.events.*?>
+<?import model.occurrence.*?>
+
+<?import view.controls.*?>
+
 <fx:root type="javafx.scene.layout.VBox" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	prefHeight="200.0" prefWidth="580.0" spacing="10.0"
@@ -27,20 +28,14 @@
 						<TimeSpinnerValueFactory />
 					</valueFactory>
 				</Spinner>
+				<Label text="Due Date: " />
+				<DatePicker fx:id="datePicker">
+					<value>
+						<LocalDate fx:factory="now" />
+					</value>
+				</DatePicker>
 
 			</children>
-			<padding>
-				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-			</padding>
-		</HBox>
-		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
-			<children>
-				<Label text="Due Date: " />
-				<DatePicker prefWidth="150.0" fx:id="datePicker" />
-			</children>
-			<VBox.margin>
-				<Insets />
-			</VBox.margin>
 			<padding>
 				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 			</padding>
@@ -49,7 +44,7 @@
 		<HBox prefHeight="30.0" prefWidth="200.0" spacing="10.0">
 			<children>
 				<Label text="Tasks: " />
-				<ControlTable fx:id="tasksTable" />
+				<ControlTable fx:id="tasksTable" title="Tasks" />
 			</children>
 			<VBox.margin>
 				<Insets />

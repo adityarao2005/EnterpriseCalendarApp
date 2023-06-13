@@ -10,6 +10,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -85,7 +86,7 @@
 		</VBox>
 	</left>
 	<center>
-		<AnchorPane prefWidth="600" prefHeight="570">
+		<AnchorPane prefWidth="620" prefHeight="570">
 			<Scheduler fx:id="schedule" AnchorPane.bottomAnchor="0"
 				AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
 				AnchorPane.topAnchor="0" />

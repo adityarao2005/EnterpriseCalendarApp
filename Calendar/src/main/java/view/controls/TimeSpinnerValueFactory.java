@@ -19,7 +19,7 @@ public class TimeSpinnerValueFactory extends SpinnerValueFactory<LocalTime> {
 	 * Constructs the Spinnner Value Factory
 	 */
 	public TimeSpinnerValueFactory() {
-		this.setConverter(new LocalTimeStringConverter(FormatStyle.SHORT, Locale.CANADA));
+		this.setConverter(new LocalTimeStringConverter(FormatStyle.SHORT));
 		this.setValue(LocalTime.now());
 	}
 
