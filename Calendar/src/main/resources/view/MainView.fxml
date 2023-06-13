@@ -29,6 +29,10 @@
 							onAction="#logoutAction" text="Log Out" />
 					</items>
 				</Menu>
+
+				<Menu mnemonicParsing="false"
+					text="Sign-in with Google" fx:id="signInMenu"
+					onAction="#signInWithGoogle" />
 			</menus>
 		</MenuBar>
 	</top>
@@ -72,10 +76,17 @@
 					prefWidth="Infinity" text="Refresh" />
 				<Button mnemonicParsing="false" onAction="#onCreateCal"
 					prefWidth="Infinity" text="Create Calendar" />
-				<TitledPane collapsible="false" prefHeight="200.0"
+				<TitledPane collapsible="false" prefHeight="100.0"
 					prefWidth="200.0" text="Unscheduled Assignments">
 					<content>
-						<ListView fx:id="assignmentsList" prefHeight="200.0"
+						<ListView fx:id="unscheduledAssignmentsList"
+							prefHeight="100.0" prefWidth="200.0" />
+					</content>
+				</TitledPane>
+				<TitledPane collapsible="false" prefHeight="100.0"
+					prefWidth="200.0" text="Assignments">
+					<content>
+						<ListView fx:id="assignmentsList" prefHeight="100.0"
 							prefWidth="200.0" />
 					</content>
 				</TitledPane>

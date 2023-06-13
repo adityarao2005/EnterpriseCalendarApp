@@ -13,16 +13,22 @@ import controller.spec.EventSpecController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import model.User;
 import model.events.Assignment;
@@ -48,6 +54,9 @@ public class HomeController {
 	private ListView<RTask> todoList;
 
 	@FXML
+	private ListView<Assignment> unscheduledAssignmentsList;
+
+	@FXML
 	private ListView<Assignment> assignmentsList;
 
 	@FXML
@@ -55,8 +64,13 @@ public class HomeController {
 
 	private User user;
 
+	@FXML
+	private MenuItem signInMenu;
+
 	// Calendars view list
 	private ObservableList<CheckBoxDS<RCalendar>> oCalendars;
+
+	private static final Color[] COLOURS = new Color[] { Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN };
 
 	@FXML
 	private void initialize() {
@@ -73,10 +87,15 @@ public class HomeController {
 		};
 
 		// Create the observable list proxy and add the items
+		SimpleIntegerProperty temp = new SimpleIntegerProperty(0);
 		oCalendars = FXCollections.observableArrayList(user.getCalendars().stream().map(CheckBoxDS::new).filter(e -> {
 
 			// Just to add the listener while we are at it
 			e.checkedProperty().addListener(l -> dateSelected());
+
+			e.getValue().setColor(COLOURS[temp.get() % COLOURS.length]);
+
+			temp.set(temp.get() + 1);
 
 			// Always return true
 			return true;
@@ -84,9 +103,27 @@ public class HomeController {
 
 		oCalendars.addListener(changeEvent);
 
-		calendars.setItems(oCalendars);
-		calendars.setCellFactory(CheckBoxListCell.forListView(CheckBoxDS::checkedProperty));
+		calendars.setCellFactory(lv -> {
+			ListCell<CheckBoxDS<RCalendar>> cell = CheckBoxListCell
+					.<CheckBoxDS<RCalendar>>forListView(CheckBoxDS::checkedProperty).call(lv);
 
+			cell.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
+				System.out.println(cell.getItem() + ":" + cell.isEmpty());
+
+				if (cell.getItem() == null) {
+					return new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
+				} else {
+
+					return new Background(
+							new BackgroundFill(cell.getItem().getValue().getColor(), CornerRadii.EMPTY, Insets.EMPTY));
+				}
+
+			}, cell.itemProperty()));
+
+			return cell;
+		});
+
+		calendars.setItems(oCalendars);
 	}
 
 	private void showWorkTodoList() {
@@ -135,11 +172,11 @@ public class HomeController {
 
 	private void showAssignmentList() {
 		// Set the items
-		assignmentsList
+		unscheduledAssignmentsList
 				.setItems(FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
 
 		// Set the cell factory
-		assignmentsList.setCellFactory(lv -> {
+		unscheduledAssignmentsList.setCellFactory(lv -> {
 			// Create a new list cell where instead of performing the toString on load, itll
 			// keep its name instead
 			ListCell<Assignment> cell = new ListCell<>() {
@@ -168,7 +205,7 @@ public class HomeController {
 
 				}
 				// Set the items
-				assignmentsList.setItems(
+				unscheduledAssignmentsList.setItems(
 						FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
 
 				// Refresh
@@ -295,6 +332,7 @@ public class HomeController {
 
 				CalendarManifestController.refreshGoogleCalendars(user);
 
+				signInMenu.setDisable(true);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -308,6 +346,18 @@ public class HomeController {
 		showAssignmentList();
 
 		dateSelected();
+	}
+
+	@FXML
+	private void signInWithGoogle() {
+		// Create a google user
+		try {
+			GoogleConnectController.createGoogleUser(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		onRefresh();
 	}
 
 }

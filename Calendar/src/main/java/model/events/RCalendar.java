@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.scene.paint.Color;
 import model.Analogous;
 
 public class RCalendar implements Serializable, Analogous<RCalendar> {
@@ -13,6 +14,7 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 	private String name;
 	private List<Reminder> reminders = new ArrayList<>();
 	private boolean classroomLoaded;
+	private transient Color color;
 
 	public RCalendar() {
 		super();
@@ -71,6 +73,14 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 		RCalendar other = (RCalendar) obj;
 		return classroomLoaded == other.classroomLoaded && Objects.equals(name, other.name)
 				&& Objects.equals(reminders, other.reminders);
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 }

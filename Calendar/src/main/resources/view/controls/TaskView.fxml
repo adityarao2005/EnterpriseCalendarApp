@@ -9,7 +9,7 @@
 <fx:root type="javafx.scene.layout.HBox" maxHeight="-Infinity"
 	maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
 	prefWidth="580.0" prefHeight="22.0"
-	style="-fx-background-color: rgb(200,200,255); -fx-border-color: black; -fx-border-radius: 5; -fx-border-width: 2;"
+	style="-fx-border-color: black; -fx-border-radius: 5; -fx-background-radius: 5; -fx-border-width: 2;"
 	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
 	<children>
 		<Label text="TASK - CLEAN UP ROOM" fx:id="nameLabel" />

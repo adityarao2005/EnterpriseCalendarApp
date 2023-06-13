@@ -12,20 +12,27 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.converter.LocalTimeStringConverter;
+import model.events.RTask;
 import model.events.Reminder;
 
 public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> implements Initializable {
@@ -111,6 +118,7 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 		private Label nameLabel;
 		@FXML
 		private Label timeLabel;
+		private ObjectProperty<Color> colorProperty = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
 		public TaskCell() {
 			FXMLLoader loader = new FXMLLoader();
@@ -124,6 +132,11 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+
+			hbox.setOpacity(100);
+
+			colorProperty.addListener((obs, old, newv) -> this
+					.setBackground(new Background(new BackgroundFill(newv, CornerRadii.EMPTY, Insets.EMPTY))));
 		}
 
 		@Override
@@ -134,6 +147,18 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 			if (item == null || empty) {
 				setGraphic(null);
 			} else {
+
+				System.out.println(item);
+				//
+				if (item instanceof RTask && ((RTask) item).getCalendar() == null) {
+
+					System.out.println(((RTask) item).getAssignment().getCalendar().getColor());
+					//
+					colorProperty.set(((RTask) item).getAssignment().getCalendar().getColor());
+				} else {
+					//
+					colorProperty.set(item.getCalendar().getColor());
+				}
 
 				// Show the task view
 				nameLabel.setText(item.getName());

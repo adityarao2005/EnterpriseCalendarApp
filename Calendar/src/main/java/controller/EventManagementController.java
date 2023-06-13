@@ -118,7 +118,7 @@ public class EventManagementController implements DialogController<String> {
 		editColumn.setCellValueFactory(v -> v.getValue().valueProperty());
 
 		// Set cell factory for delete column view
-		editColumn.setCellFactory(v -> new ImageIconTTC(EDIT, this::editReminder));
+		editColumn.setCellFactory(v -> new ImageIconTTC(EDIT, this::editReminder, true));
 
 		// Set the value of the treetablecolumn
 		completedColumn.setCellValueFactory(v -> v.getValue().valueProperty());
@@ -200,6 +200,7 @@ public class EventManagementController implements DialogController<String> {
 		private HBox hbox = new HBox();
 		private Button button;
 		private Reminder lastItem;
+		private boolean allowAssignment;
 
 		public ImageIconTTC(Image icon, Consumer<Reminder> handler) {
 			ImageView image = new ImageView(icon);
@@ -215,6 +216,11 @@ public class EventManagementController implements DialogController<String> {
 			button.setOnAction(v -> handler.accept(lastItem));
 		}
 
+		public ImageIconTTC(Image icon, Consumer<Reminder> handler, boolean allowAssignment) {
+			this(icon, handler);
+			this.allowAssignment = allowAssignment;
+		}
+
 		@Override
 		public void updateItem(Reminder item, boolean empty) {
 			super.updateItem(item, empty);
@@ -226,8 +232,10 @@ public class EventManagementController implements DialogController<String> {
 				lastItem = item;
 				setGraphic(hbox);
 
-				if (item.getCalendar() != null && item.getCalendar().isClassroomLoaded()) {
-					button.setDisable(true);
+				if (item.getCalendar() != null) {
+					if (!allowAssignment && item.getCalendar().isClassroomLoaded()) {
+						button.setDisable(true);
+					}
 				} else {
 					button.setDisable(false);
 				}
