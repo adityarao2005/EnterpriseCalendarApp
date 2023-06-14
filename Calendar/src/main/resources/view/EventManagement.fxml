@@ -57,9 +57,9 @@
 					BorderPane.alignment="CENTER">
 					<buttons>
 						<Button mnemonicParsing="false" onAction="#onReload"
-							text="Reload" />
+							text="Reload" styleClass="primary-button"/>
 						<Button mnemonicParsing="false" onAction="#onCreate"
-							text="Create" />
+							text="Create" styleClass="primary-button"/>
 					</buttons>
 				</ButtonBar>
 			</top>

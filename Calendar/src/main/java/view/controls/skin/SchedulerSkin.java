@@ -135,8 +135,7 @@ public class SchedulerSkin extends FXRootSkinBase<Scheduler, ScrollPane> impleme
 
 			hbox.setOpacity(100);
 
-			colorProperty.addListener((obs, old, newv) -> this
-					.setBackground(new Background(new BackgroundFill(newv, CornerRadii.EMPTY, Insets.EMPTY))));
+			colorProperty.addListener((obs, old, newv) -> this.setStyle(String.format("-fx-background-color: rgb(%d, %d, %d)", (int) (newv.getRed() * 255), (int) (newv.getGreen() * 255), (int) (newv.getBlue() * 255))));
 		}
 
 		@Override

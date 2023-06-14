@@ -17,9 +17,9 @@
 			BorderPane.alignment="CENTER">
 			<children>
 				<Button mnemonicParsing="false" onAction="#loginAction"
-					prefWidth="Infinity" text="Login" />
+					prefWidth="Infinity" text="Login" styleClass="primary-button" />
 				<Button mnemonicParsing="false" onAction="#registerAction"
-					prefWidth="Infinity" text="Register" />
+					prefWidth="Infinity" text="Register" styleClass="primary-button" />
 			</children>
 			<padding>
 				<Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
@@ -30,11 +30,8 @@
 		<BorderPane prefHeight="200.0" prefWidth="200.0"
 			BorderPane.alignment="CENTER">
 			<center>
-				<Label text="ICS Calendar App" BorderPane.alignment="CENTER">
-					<font>
-						<Font name="Arial Bold" size="60.0" />
-					</font>
-				</Label>
+				<Label text="ICS Calendar App" BorderPane.alignment="CENTER"
+					styleClass="title-label" />
 			</center>
 			<bottom>
 				<Label text="For Task Management and Scheduling"

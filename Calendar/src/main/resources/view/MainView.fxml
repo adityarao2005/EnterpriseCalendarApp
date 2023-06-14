@@ -10,6 +10,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
@@ -30,9 +31,8 @@
 					</items>
 				</Menu>
 
-				<Menu mnemonicParsing="false"
-					text="Sign-in with Google" fx:id="signInMenu"
-					onAction="#signInWithGoogle" />
+				<Menu mnemonicParsing="false" text="Sign-in with Google"
+					fx:id="signInMenu" onAction="#signInWithGoogle" />
 			</menus>
 		</MenuBar>
 	</top>
@@ -69,27 +69,44 @@
 					</content>
 				</TitledPane>
 				<Button mnemonicParsing="false" onAction="#onCreateTask"
-					prefWidth="Infinity" text="Create New Event" />
+					prefWidth="Infinity" text="Create New Event"
+					styleClass="primary-button" />
 				<Button mnemonicParsing="false" onAction="#onManage"
-					prefWidth="Infinity" text="Manage Events" />
+					prefWidth="Infinity" text="Manage Events"
+					styleClass="primary-button" />
 				<Button mnemonicParsing="false" onAction="#onRefresh"
-					prefWidth="Infinity" text="Refresh" />
+					prefWidth="Infinity" text="Refresh" styleClass="primary-button" />
 				<Button mnemonicParsing="false" onAction="#onCreateCal"
-					prefWidth="Infinity" text="Create Calendar" />
-				<TitledPane collapsible="false" prefHeight="100.0"
-					prefWidth="200.0" text="Unscheduled Assignments">
-					<content>
-						<ListView fx:id="unscheduledAssignmentsList"
-							prefHeight="100.0" prefWidth="200.0" />
-					</content>
-				</TitledPane>
-				<TitledPane collapsible="false" prefHeight="100.0"
-					prefWidth="200.0" text="Assignments">
-					<content>
-						<ListView fx:id="assignmentsList" prefHeight="100.0"
-							prefWidth="200.0" />
-					</content>
-				</TitledPane>
+					prefWidth="Infinity" text="Create Calendar"
+					styleClass="primary-button" />
+				<Button mnemonicParsing="false" onAction="#workOnTasks"
+					prefWidth="Infinity" text="Work on Tasks"
+					styleClass="primary-button" />
+				<Accordion prefHeight="200.0">
+					<panes>
+						<TitledPane prefWidth="200.0"
+							text="Unscheduled Assignments">
+							<content>
+								<ListView fx:id="unscheduledAssignmentsList"
+									prefHeight="100.0" prefWidth="200.0" />
+							</content>
+						</TitledPane>
+						<TitledPane prefWidth="200.0"
+							text="Scheduled Assignments">
+							<content>
+								<ListView fx:id="assignmentsList" prefHeight="100.0"
+									prefWidth="200.0" />
+							</content>
+						</TitledPane>
+						<TitledPane prefWidth="200.0"
+							text="Completed Assignments">
+							<content>
+								<ListView fx:id="completedAssignmentsList"
+									prefHeight="100.0" prefWidth="200.0" />
+							</content>
+						</TitledPane>
+					</panes>
+				</Accordion>
 			</children>
 			<padding>
 				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

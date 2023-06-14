@@ -16,13 +16,10 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="controller.RegisterController">
 	<top>
-		<Label text="Register" BorderPane.alignment="CENTER">
+		<Label text="Register" BorderPane.alignment="CENTER" styleClass="title-label">
 			<padding>
 				<Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
 			</padding>
-			<font>
-				<Font name="Arial Bold" size="30.0" />
-			</font>
 		</Label>
 	</top>
 	<center>
@@ -73,9 +70,9 @@
 			BorderPane.alignment="CENTER">
 			<buttons>
 				<Button mnemonicParsing="false" onAction="#backAction"
-					text="Back" ButtonBar.buttonData="LEFT" />
+					text="Back" ButtonBar.buttonData="LEFT" styleClass="secondary-button" />
 				<Button mnemonicParsing="false" onAction="#registerAction"
-					text="Register" />
+					text="Register" styleClass="primary-button"/>
 			</buttons>
 			<padding>
 				<Insets left="10.0" right="10.0" />

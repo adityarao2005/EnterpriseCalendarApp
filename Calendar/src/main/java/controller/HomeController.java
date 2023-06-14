@@ -29,6 +29,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import model.User;
 import model.events.Assignment;
@@ -58,6 +59,9 @@ public class HomeController {
 
 	@FXML
 	private ListView<Assignment> assignmentsList;
+
+	@FXML
+	private ListView<Assignment> completedAssignmentsList;
 
 	@FXML
 	private Scheduler schedule;
@@ -157,10 +161,16 @@ public class HomeController {
 			private Map<String, RTask> map = new HashMap<>();
 
 			public String toString(RTask t) {
-				if (t != null)
-					map.put(t.getName(), t);
+				String value = null;
 
-				return t == null ? null : t.getName();
+				if (t != null) {
+					if (t.getAssignment() != null)
+						map.put(value = t.getName() + " - " + t.getAssignment().getName(), t);
+					else
+						map.put(value = t.getName(), t);
+				}
+
+				return value;
 			}
 
 			public RTask fromString(String string) {
@@ -175,18 +185,43 @@ public class HomeController {
 		unscheduledAssignmentsList
 				.setItems(FXCollections.observableList(CalendarManifestController.getUnattendedAssignments(user)));
 
-		// Set the cell factory
-		unscheduledAssignmentsList.setCellFactory(lv -> {
-			// Create a new list cell where instead of performing the toString on load, itll
-			// keep its name instead
+		assignmentsList
+				.setItems(FXCollections.observableList(CalendarManifestController.getScheduledAssignments(user)));
+
+		completedAssignmentsList
+				.setItems(FXCollections.observableList(CalendarManifestController.getCompletedAssignments(user)));
+
+		final Callback<ListView<Assignment>, ListCell<Assignment>> ASSIGNMENT_CALLBACK = lv -> {
+
 			ListCell<Assignment> cell = new ListCell<>() {
 				@Override
 				public void updateItem(Assignment item, boolean empty) {
 					super.updateItem(item, empty);
 
 					setText(item == null || empty ? "" : item.getName());
+
+					// Set the background
+					if (item != null) {
+						Color color = item.getCalendar().getColor();
+
+						this.setStyle(
+								String.format("-fx-background-color: rgb(%d, %d, %d)", (int) (color.getRed() * 255),
+										(int) (color.getGreen() * 255), (int) (color.getBlue() * 255)));
+					}
 				}
 			};
+
+			return cell;
+		};
+
+		assignmentsList.setCellFactory(ASSIGNMENT_CALLBACK);
+
+		completedAssignmentsList.setCellFactory(ASSIGNMENT_CALLBACK);
+		// Set the cell factory
+		unscheduledAssignmentsList.setCellFactory(lv -> {
+			// Create a new list cell where instead of performing the toString on load, itll
+			// keep its name instead
+			ListCell<Assignment> cell = ASSIGNMENT_CALLBACK.call(lv);
 
 			// Create a context/popup menu
 			ContextMenu contextMenu = new ContextMenu();
@@ -356,6 +391,15 @@ public class HomeController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+
+		onRefresh();
+	}
+
+	@FXML
+	private void workOnTasks() {
+
+		// Show a dialog
+		Application.getApplication().dialog("/view/Pomodoro.fxml", "Lets Work!");
 
 		onRefresh();
 	}

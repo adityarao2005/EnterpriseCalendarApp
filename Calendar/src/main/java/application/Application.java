@@ -6,12 +6,15 @@ import java.util.stream.Collectors;
 import controller.DialogController;
 import controller.dao.FileDAOController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.User;
@@ -97,6 +100,7 @@ public class Application extends javafx.application.Application {
 			// Retrieves the container from the FXML file
 			Parent parent = FXMLLoader.load(this.getClass().getResource(url));
 
+			parent.getStylesheets().add("/styles/application.css");
 			// Sets the scene
 			Scene scene = new Scene(parent);
 			primaryStage.setScene(scene);
@@ -124,6 +128,13 @@ public class Application extends javafx.application.Application {
 
 			// Get the fxml value
 			DialogPane parent = loader.load();
+			parent.getStylesheets().add("/styles/application.css");
+
+			for (ButtonType buttons : parent.getButtonTypes()) {
+				Node button = parent.lookupButton(buttons);
+
+				button.getStyleClass().add("primary-button");
+			}
 
 			// Create a new dialog
 			Dialog<R> dialog = new Dialog<>();

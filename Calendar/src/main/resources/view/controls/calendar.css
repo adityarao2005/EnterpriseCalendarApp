@@ -1,13 +1,39 @@
 .-fx-calendar-cell-before {
-	-fx-background-color: rgb(255, 200 ,200);
+	-fx-background-color: rgb(255, 200, 200);
+}
+
+.-fx-calendar-cell-before:pressed {
+	-fx-background-color: rgb(225, 170, 170);
+}
+
+.-fx-calendar-cell-before:hover {
+	-fx-background-color: rgb(255, 220, 220);
 }
 
 .-fx-calendar-cell-after {
-	-fx-background-color: rgb(200, 255 ,200);	
+	-fx-background-color: rgb(200, 255, 200);	
+}
+
+.-fx-calendar-cell-after: hover {
+	-fx-background-color: rgb(220, 255, 220);	
+}
+
+.-fx-calendar-cell-after:pressed {
+	-fx-background-color: rgb(170, 255, 170);
 }
 
 .-fx-calendar-cell-selected {
 	-fx-background-color: rgb(210, 210, 210);
+	-fx-background-radius: 0;
+}
+
+.-fx-calendar-cell-selected: hover {
+	-fx-background-color: rgb(230, 230, 230);
+	-fx-background-radius: 0;
+}
+
+.-fx-calendar-cell-selected: pressed {
+	-fx-background-color: rgb(180, 180, 180);
 	-fx-background-radius: 0;
 }
 

@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.google.api.services.classroom.model.Course;
 import com.google.api.services.classroom.model.CourseWork;
@@ -121,6 +122,26 @@ public class CalendarManifestController {
 	}
 
 	public static List<Assignment> getUnattendedAssignments(User user) {
+		return getUncompletedAssignments(user).stream().filter(assignment -> assignment.getSchedule().isEmpty())
+				.toList();
+
+	}
+
+	public static List<Assignment> getScheduledAssignments(User user) {
+		return getUncompletedAssignments(user).stream().filter(assignment -> !assignment.getSchedule().isEmpty())
+				.toList();
+
+	}
+
+	public static List<Assignment> getUncompletedAssignments(User user) {
+		return getAssignments(user).stream().filter(Predicate.not(Assignment::isCompleted)).toList();
+	}
+
+	public static List<Assignment> getCompletedAssignments(User user) {
+		return getAssignments(user).stream().filter(Assignment::isCompleted).toList();
+	}
+
+	public static List<Assignment> getAssignments(User user) {
 		// Create a container list
 		List<Assignment> tasks = new ArrayList<>();
 
@@ -133,10 +154,7 @@ public class CalendarManifestController {
 				// the task to the list
 				if (rem instanceof Assignment) {
 					Assignment task = (Assignment) rem;
-
-					if (!task.isCompleted() && task.getSchedule().isEmpty()) {
-						tasks.add(task);
-					}
+					tasks.add(task);
 				}
 			}
 		}
