@@ -1,25 +1,27 @@
 
 .root {
 	
-	-background-color: #b9d8c2;
-	-text-color-light: -background-color;
+	-background-color: #b3f2c8;
+	-text-color-light: white;
 	-text-color-dark: #04010e;
 	-primary-button-color: #2c4251;
-	-secondary-button-color: -background-color;
-	-other-controls-color: #b2c649;
+	-secondary-button-color: #15d656;
+	-other-controls-color: #47c471;
 	
 	
 	-fx-background-color: -background-color;
 	-fx-text-fill: -text-color-dark;
 }
 
-.menu-bar, .titled-pane > .title, .holder {
+.menu-bar, .titled-pane > .title, .holder, .table-view .column-header,
+.tree-table-view .column-header .filler,
+.tree-table-view .column-header-background .filler {
 	-fx-background-color: -other-controls-color;
 }
 
 .primary-button {
 	-fx-background-color: -primary-button-color;
-	-fx-text-fill: 0.0text-color-light;
+	-fx-text-fill: -text-color-light;
 }
 
 .secondary-button {

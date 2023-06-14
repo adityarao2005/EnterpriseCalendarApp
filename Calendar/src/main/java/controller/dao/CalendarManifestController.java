@@ -52,9 +52,32 @@ public class CalendarManifestController {
 			for (CourseWork work : courseWork) {
 
 				// If there is already this assignment in our calendar, skip it
-				if (calendar.getReminders().stream().map(m -> (Assignment) m)
-						.anyMatch(new Assignment(work.getTitle())::identical))
+				if (calendar.getReminders().stream().filter(m -> m instanceof Assignment).map(m -> (Assignment) m)
+						.anyMatch(new Assignment(work.getTitle())::identical)) {
+
+					// Get the submissions
+					List<StudentSubmission> submissions = GoogleConnectController.listStudentSubmission(user, work);
+
+					System.out.println(submissions);
+
+					Assignment assignment = calendar.getReminders().stream().filter(m -> m instanceof Assignment)
+							.map(m -> (Assignment) m)
+							.filter(assign -> assign.identical(new Assignment(work.getTitle()))).findFirst().get();
+
+					// If there are no submissions, set it as not completed
+					if (submissions.isEmpty()) {
+
+						assignment.setCompleted(false);
+					} else {
+
+						// Otherwise get the submission and check its state
+						StudentSubmission submission = submissions.get(0);
+
+						assignment.setCompleted(submission.getState().equals("TURNED_IN"));
+					}
+
 					continue;
+				}
 
 				// Get the date and time
 				LocalDate date = LocalDate.of(work.getDueDate().getYear(), work.getDueDate().getMonth(),
@@ -71,6 +94,8 @@ public class CalendarManifestController {
 
 				// Get the submissions
 				List<StudentSubmission> submissions = GoogleConnectController.listStudentSubmission(user, work);
+
+				System.out.println(submissions);
 
 				// If there are no submissions, set it as not completed
 				if (submissions.isEmpty()) {

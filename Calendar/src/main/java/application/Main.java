@@ -5,7 +5,7 @@ Name(s): Aditya Rao
 Date: June 14th, 2023
 Course Code: ICS4U1-03, Mr.Fernandes
 Title: ICS Calendar App
-Description: // TODO: keep description
+Description: Advanced Task Management and Scheduler tool
 Features:
  - Ability to login and register
  - Ability to use your google account for loading calendars

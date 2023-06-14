@@ -76,7 +76,7 @@ public class HomeController {
 	private ObservableList<CheckBoxDS<RCalendar>> oCalendars;
 
 	// Colours for calendars, to differentiate which events come from which calendar
-	private static final Color[] COLOURS = new Color[] { Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN };
+	private static final Color[] COLOURS = new Color[] { Color.ORANGE, Color.CYAN, Color.YELLOW, Color.GREENYELLOW };
 
 	// Calls refresh on init
 	@FXML
@@ -111,12 +111,14 @@ public class HomeController {
 
 		oCalendars.addListener(changeEvent);
 
+		// Create the cell factory
 		calendars.setCellFactory(lv -> {
+			// Create the cell
 			ListCell<CheckBoxDS<RCalendar>> cell = CheckBoxListCell
 					.<CheckBoxDS<RCalendar>>forListView(CheckBoxDS::checkedProperty).call(lv);
 
+			// Bind the cell label
 			cell.backgroundProperty().bind(Bindings.createObjectBinding(() -> {
-				System.out.println(cell.getItem() + ":" + cell.isEmpty());
 
 				if (cell.getItem() == null) {
 					return new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
