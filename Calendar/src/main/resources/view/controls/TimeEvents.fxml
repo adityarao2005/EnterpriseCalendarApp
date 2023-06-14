@@ -9,7 +9,7 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
 	minHeight="-Infinity" minWidth="-Infinity" prefWidth="600"
 	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
-	fx:id="mainContainer" style="-fx-background-color: -quintinary-color">
+	fx:id="mainContainer" styleClass="holder">
 	<center>
 		<ListView fx:id="listView" prefWidth="600" prefHeight="180"
 			BorderPane.alignment="CENTER" />

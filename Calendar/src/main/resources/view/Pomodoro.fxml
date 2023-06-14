@@ -16,7 +16,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <DialogPane prefHeight="300.0" prefWidth="600.0"
-	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PomodoroController" fx:id="dialogPane">
+	xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="controller.PomodoroController" fx:id="dialogPane">
 	<fx:define>
 		<AnchorPane fx:id="finishedScreen" prefHeight="200.0"
 			prefWidth="200.0">
@@ -59,7 +60,7 @@
 				<Label alignment="CENTER" layoutX="146.0"
 					text="Keep working! You are doing great!" textAlignment="CENTER"
 					AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-					styleClass="title-label">
+					styleClass="title-label" fx:id="titleLabel">
 					<padding>
 						<Insets bottom="30.0" top="30.0" />
 					</padding>
@@ -78,7 +79,7 @@
 							text="Are you ready to begin your work today?"
 							textAlignment="CENTER" AnchorPane.bottomAnchor="200.0"
 							AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-							AnchorPane.topAnchor="0.0" styleClass="primary-button">
+							AnchorPane.topAnchor="0.0" styleClass="title-label">
 							<padding>
 								<Insets bottom="30.0" top="30.0" />
 							</padding>
@@ -102,7 +103,7 @@
 									</children>
 								</VBox>
 								<Pane prefHeight="100.0" prefWidth="47.0"
-									HBox.hgrow="ALWAYS"/>
+									HBox.hgrow="ALWAYS" />
 								<VBox>
 									<children>
 										<Label text="Duration of Break:" />
@@ -127,9 +128,11 @@
 					BorderPane.alignment="CENTER">
 					<children>
 						<Label text="Pending Tasks" />
-						<ListView prefHeight="200.0" prefWidth="100.0" />
+						<ListView prefHeight="200.0" prefWidth="100.0"
+							fx:id="pendingList" />
 						<Label text="Completed Tasks" />
-						<ListView prefHeight="200.0" prefWidth="200.0" />
+						<ListView prefHeight="200.0" prefWidth="200.0"
+							fx:id="completedList" />
 					</children>
 				</VBox>
 			</left>

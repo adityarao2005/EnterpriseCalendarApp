@@ -150,8 +150,6 @@ public class Application extends javafx.application.Application {
 				default -> null;
 				};
 
-				System.out.println(buttonType + " : " + result);
-
 				return result;
 			});
 
@@ -163,14 +161,10 @@ public class Application extends javafx.application.Application {
 				// Get result from dialog
 				result = dialog.showAndWait().orElse(null);
 
-				System.out.println(result);
-
 				// If the result is null
 				if (result == null) {
 					// Get the errors if any
 					if (getErrors() != null) {
-
-						System.out.println(getErrors());
 
 						// Alert the user of the errors
 						Alert errorDialog = new Alert(AlertType.ERROR, "Error");
@@ -198,6 +192,7 @@ public class Application extends javafx.application.Application {
 
 	}
 
+	// Getters and Setters
 	public List<String> getErrors() {
 		return errors;
 	}

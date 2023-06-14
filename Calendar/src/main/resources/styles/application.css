@@ -1,30 +1,29 @@
 
 .root {
-	-primary-color: #2c4251;
-	-secondary-color: #ffffff;
-	-tertiary-color: #d16666;
-	-quadrinary-color: #c1c1c1;
-	-quintinary-color: #b2c649;
+	
+	-background-color: #b9d8c2;
+	-text-color-light: -background-color;
+	-text-color-dark: #04010e;
+	-primary-button-color: #2c4251;
+	-secondary-button-color: -background-color;
+	-other-controls-color: #b2c649;
 	
 	
-	text-color-light: -secondary-color;
-	text-color-dark: #04010e;
-	
-	-fx-background-color: -secondary-color;
-	-fx-text-fill: text-color-dark;
+	-fx-background-color: -background-color;
+	-fx-text-fill: -text-color-dark;
 }
 
-.menu-bar {
-	-fx-background-color: -quintinary-color;
+.menu-bar, .titled-pane > .title, .holder {
+	-fx-background-color: -other-controls-color;
 }
 
 .primary-button {
-	-fx-background-color: -primary-color;
-	-fx-text-fill: text-color-light;
+	-fx-background-color: -primary-button-color;
+	-fx-text-fill: 0.0text-color-light;
 }
 
 .secondary-button {
-	-fx-background-color: -tertiary-color;
+	-fx-background-color: -secondary-button-color;
 }
 
 .title-label {
@@ -32,35 +31,32 @@
 }
 
 .primary-button:hover {
-	-fx-background-color: derive(-primary-color, 10.0%);
+	-fx-background-color: derive(-primary-button-color, 10.0%);
 }
 
 .secondary-button:hover {
-	-fx-background-color: derive(-tertiary-color, 10.0%);
+	-fx-background-color: derive(-secondary-button-color, 10.0%);
 }
 
 .primary-button:pressed {
-    -fx-background-color: derive(-primary-color, -20.0%);
+    -fx-background-color: derive(-primary-button-color, -20.0%);
 }
 
 .secondary-button:pressed {
-	-fx-background-color: derive(-tertiary-color, -20.0%);
+	-fx-background-color: derive(-secondary-button-color, -20.0%);
 }
 
-.list-view .list-cell:odd, .list-view .list-cell:even {
-    -fx-background-color: -secondary-color;
-}
-
-
+.list-view .list-cell:odd,
+.list-view .list-cell:even,
 .list-view .list-cell:selected:odd,
 .list-view .list-cell:selected:even {
-    -fx-background-color: -fx-background;
+    -fx-background-color: -background-color;
 }
 
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
-    -fx-background-color :-secondary-color;
-    -fx-border-color :-secondary-color;
+    -fx-background-color :-background-color;
+    -fx-border-color :-background-color;
     -fx-background-radius : 0.0em;
     -fx-border-radius :2.0em;
 }
@@ -84,7 +80,7 @@
 
  .scroll-bar .increment-arrow,
  .scroll-bar .decrement-arrow{
-    -fx-shape : " ";    
+    -fx-shape : " ";
     -fx-padding :0.15em 0.0;
 }
 
@@ -96,14 +92,14 @@
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color: derive(-primary-color, -20.0%);
+    -fx-background-color: derive(-primary-button-color, -20.0%);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
 }
 
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: derive(-primary-color, 10.0%);
+    -fx-background-color: derive(-primary-button-color, 10.0%);
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
 }
