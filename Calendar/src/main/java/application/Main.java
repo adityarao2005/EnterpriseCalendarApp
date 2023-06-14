@@ -4,7 +4,7 @@ package application;
 Name(s): Aditya Rao
 Date: June 14th, 2023
 Course Code: ICS4U1-03, Mr.Fernandes
-Title: // TODO: Keep title for app
+Title: ICS Calendar App
 Description: // TODO: keep description
 Features:
  - Ability to login and register
@@ -23,7 +23,7 @@ Major Skills:
  - Serialization and File IO
  - Observable Design pattern and Data binding
  - Singleton Design pattern
- - Factory and Builder design pattern
+ - Factory, Builder, Builder Factory design pattern
  - Using non java code as a view while having java controller (FXML)
  - CSS
  - Model-Skin-Behavior Architecture for controls

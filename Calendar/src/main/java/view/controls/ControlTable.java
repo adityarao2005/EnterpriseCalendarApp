@@ -17,6 +17,7 @@ import javafx.scene.control.Skin;
 import javafx.util.Callback;
 import view.controls.skin.ControlTableSkin;
 
+// Represents a mutable list view through add and remove buttons
 public final class ControlTable<T> extends Control {
 
 	// Represents the items of the list
@@ -126,6 +127,7 @@ public final class ControlTable<T> extends Control {
 		this.cellFactory.set(cellFactory);
 	}
 
+	// Represents the title of the control table
 	private final StringProperty title = new SimpleStringProperty(this, "title", "Title");
 
 	public StringProperty titleProperty() {

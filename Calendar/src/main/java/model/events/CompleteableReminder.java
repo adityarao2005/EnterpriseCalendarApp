@@ -4,11 +4,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+// Represent an assignment which is completeable
 public abstract class CompleteableReminder extends Reminder {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private boolean completed;
 
+	// Constructor
 	public CompleteableReminder() {
 		super();
 	}
@@ -18,6 +21,7 @@ public abstract class CompleteableReminder extends Reminder {
 		this.completed = completed;
 	}
 
+	// Getters and Setters
 	public boolean isCompleted() {
 		return completed;
 	}
@@ -26,6 +30,7 @@ public abstract class CompleteableReminder extends Reminder {
 		this.completed = completed;
 	}
 
+	// Copy method
 	@Override
 	public void from(Reminder reminder) {
 		super.from(reminder);
@@ -35,13 +40,16 @@ public abstract class CompleteableReminder extends Reminder {
 		this.completed = assignment.completed;
 	}
 
+	// Define an abstract finish by method
 	public abstract LocalDateTime finishBy();
 
+	// to string
 	@Override
 	public String toString() {
 		return String.format("%s, completed=%b", super.toString(), completed);
 	}
 
+	// hashcode and equals
 	@Override
 	public int hashCode() {
 		final int prime = 31;

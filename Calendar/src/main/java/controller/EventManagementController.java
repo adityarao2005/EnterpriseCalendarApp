@@ -26,13 +26,17 @@ import model.events.REvent;
 import model.events.RTask;
 import model.events.Reminder;
 
+// EventManagementController - Inherits the interface DialogController - Used to allow the user to manage all the tasks, events, and assignments that he/she has
 public class EventManagementController implements DialogController<String> {
 
+	// Get images from resource
 	private static final Image TRASH = new Image(
 			EventManagementController.class.getResourceAsStream("/images/trash.png"));
 	private static final Image EDIT = new Image(
 			EventManagementController.class.getResourceAsStream("/images/edit-solid.png"));
 
+	// Fields
+	// Loaded by FXMLLoader through Dependancy Injection
 	@FXML
 	private TreeTableView<Reminder> treeTableView;
 
@@ -57,9 +61,11 @@ public class EventManagementController implements DialogController<String> {
 	// Root node
 	private TreeItem<Reminder> root;
 
+	// Constructor
 	public EventManagementController() {
 	}
 
+	// First method called by FXMLLoader
 	@FXML
 	private void initialize() {
 		// Set root node
@@ -70,22 +76,29 @@ public class EventManagementController implements DialogController<String> {
 
 		// Set cell value factory of the type column
 		typeColumn.setCellValueFactory(value -> {
+			// Get the event
 			Reminder type = value.getValue().getValue();
 
+			// If the event is a reminder then return "REMINDER"
 			if (type instanceof REvent)
 				return new ReadOnlyStringWrapper("REMINDER").getReadOnlyProperty();
 
+			// If the event is a task then return "TASK"
 			if (type instanceof RTask)
 				return new ReadOnlyStringWrapper("TASK").getReadOnlyProperty();
 
+			// If the event is a reminder then return "ASSIGNMENT"
 			return new ReadOnlyStringWrapper("ASSIGNMENT").getReadOnlyProperty();
 		});
 
 		// Set cell factory for calendar column
 		calendarColumn.setCellFactory(v -> {
+			// Create a new treetablecell
 			return new TreeTableCell<>() {
+				// When the treetable updates all its cells, this method is called
 				@Override
 				public void updateItem(RCalendar item, boolean empty) {
+					// Call super method
 					super.updateItem(item, empty);
 
 					// Set the text
@@ -96,10 +109,13 @@ public class EventManagementController implements DialogController<String> {
 
 		// Set cell factory for classroom loaded column
 		classroomLoaded.setCellFactory(v -> {
+			// Create a new Treetable cell
 			return new TreeTableCell<>() {
 
+				// When the treetable updates all its cells, this method is called
 				@Override
 				public void updateItem(RCalendar item, boolean empty) {
+					// Call super method
 					super.updateItem(item, empty);
 
 					// Set the text
@@ -132,6 +148,7 @@ public class EventManagementController implements DialogController<String> {
 		onReload();
 	}
 
+	// called to reload page
 	@FXML
 	private void onReload() {
 		// Clear the roots
@@ -160,83 +177,114 @@ public class EventManagementController implements DialogController<String> {
 		}
 	}
 
+	// Called to create a new event
 	@FXML
 	private void onCreate() {
 		// Get an instance from a modal
 		Reminder reminder = Application.getApplication().dialog("/view/EventModalView.fxml", "Create Event");
 
-		// add
+		// add if the reminder exists
 		if (reminder != null) {
 			reminder.getCalendar().getReminders().add(reminder);
 		}
 	}
 
+	// Delete the reminder
 	private void deleteReminder(Reminder reminder) {
-		System.out.println(reminder);
-
+		// If the reminder is a task which origins from an assignment
 		if (reminder instanceof RTask && ((RTask) reminder).getAssignment() != null) {
+			// Remove the task from its assignment
 			((RTask) reminder).getAssignment().getSchedule().remove(reminder);
 		} else {
+			// Otherwise remove the event from the calendar
 			reminder.getCalendar().getReminders().remove(reminder);
 		}
 	}
 
+	// Edit the reminder
 	private void editReminder(Reminder reminder) {
 
+		// Get the neighbors of it from its parent if it is a task which origins from an
+		// assignment
 		List<RTask> otherTasks = (reminder instanceof RTask && ((RTask) reminder).getAssignment() != null)
 				? ((RTask) reminder).getAssignment().getSchedule()
 				: List.of();
 
+		// Copy values from the value returned by the dialog
 		reminder.from(EventSpecController.createReminderFrom(reminder, otherTasks));
 	}
 
-	// Not needed but good to have since this is acting as a dialog
+	// Not needed but good to have since this is acting as a dialog but might as
+	// well
 	@Override
 	public String getResult() {
 		return "ok'd";
 	}
 
+	// An Icon treetable cell - contains a clickable icon
 	public static class ImageIconTTC extends TreeTableCell<Reminder, Reminder> {
+		// Fields
+		// Controls
 		private HBox hbox = new HBox();
 		private Button button;
 		private Reminder lastItem;
-		private boolean allowAssignment;
+		// Check whether we allow assignments or not
+		private boolean allowAssignmentFromClassroom;
 
+		// Constructor
 		public ImageIconTTC(Image icon, Consumer<Reminder> handler) {
+			// create an image viewer
 			ImageView image = new ImageView(icon);
+			// Create a button
 			button = new Button();
 
+			// Preserve the image ratio and set the fit height to 20
 			image.setPreserveRatio(true);
 			image.setFitHeight(20);
 
+			// Set graphic
 			button.setGraphic(image);
 
-			HBox.setHgrow(button, Priority.NEVER);
+			// Add button to hbox and add action listener
 			hbox.getChildren().addAll(button);
 			button.setOnAction(v -> handler.accept(lastItem));
 		}
 
-		public ImageIconTTC(Image icon, Consumer<Reminder> handler, boolean allowAssignment) {
+		// Overloaded constructor
+		public ImageIconTTC(Image icon, Consumer<Reminder> handler, boolean allowAssignmentFromClassroom) {
+			// Call other constructor
 			this(icon, handler);
-			this.allowAssignment = allowAssignment;
+			// Set the value of this
+			this.allowAssignmentFromClassroom = allowAssignmentFromClassroom;
 		}
 
+		// Updates the cell with given item
 		@Override
 		public void updateItem(Reminder item, boolean empty) {
+			// Calls super method
 			super.updateItem(item, empty);
-			setText(null); // No text in label of super class
+			// make sure there is no text
+			setText(null);
+			// If the item does not exist
 			if (item == null || empty) {
+				// Set null
 				lastItem = null;
 				setGraphic(null);
 			} else {
+				// Otherwise set the graphic and value
 				lastItem = item;
 				setGraphic(hbox);
 
+				// If the calendar does not exist
 				if (item.getCalendar() != null) {
-					if (!allowAssignment && item.getCalendar().isClassroomLoaded()) {
+					// If we dont allow assignments from the classroom and the calendar is classroom
+					// loaded, disable the
+					// button
+					if (!allowAssignmentFromClassroom && item.getCalendar().isClassroomLoaded()) {
 						button.setDisable(true);
 					}
 				} else {
+					// Enable the button
 					button.setDisable(false);
 				}
 			}

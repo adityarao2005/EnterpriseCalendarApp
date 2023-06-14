@@ -10,31 +10,21 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
-/**
- * Simulates the Win32 calendar control and calendar from the JavaFX DatePicker
- * control content
- * 
- * @author Raos
- *
- */
+// Simulates the Win32 calendar control and calendar from the JavaFX DatePicker
+// control content
 public final class UCalendar extends Control {
-	/**
-	 * Creates the default skin as {@link CalendarSkin}
-	 */
+
+	// Creates the default skin
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new UCalendarSkin(this);
 	}
 
-	/**
-	 * Constructs Calendar object with a default date of now
-	 */
+	// Constructor
 	public UCalendar() {
 	}
 
-	/**
-	 * The Event handler of the Calendar dates or changes of the current date
-	 */
+	// Event handler action property
 	public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
 		return onAction;
 	}
@@ -64,9 +54,7 @@ public final class UCalendar extends Control {
 		}
 	};
 
-	/**
-	 * The Current Date of the Calendar Control.
-	 */
+	// Current date property
 	public final ObjectProperty<LocalDate> currentDateProperty() {
 		return this.currentDate;
 	}

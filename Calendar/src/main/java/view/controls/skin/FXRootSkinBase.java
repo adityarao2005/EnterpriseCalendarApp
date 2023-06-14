@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.controls.skin;
 
 import java.io.IOException;
@@ -22,43 +17,40 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 
-/**
- *
- * Skin base for all controls adapting FXML with an fx:root
- * @author Raos
- * @param <E> - the control class that this is the skin for
- * @param <ROOT> - the root node class
- */
-public abstract class FXRootSkinBase<E extends Control, ROOT extends Node> extends SkinBase<E> implements Initializable {
+// Skin base for all controls adapting FXML with an fx:root
+public abstract class FXRootSkinBase<E extends Control, ROOT extends Node> extends SkinBase<E>
+		implements Initializable {
 
-	/**
-	 * Constructs the FXRootSkinBase class
-	 * @param e - the control that the skin is for
-	 * @param fxml - the location of the fxml file
-	 * @param rootSupplier - the supplier of the root node object
-	 */
+	// Constructs the FXRootSkinBase class
 	@SafeVarargs
 	public FXRootSkinBase(E e, URL fxml, Supplier<ROOT> rootSupplier, Pair<String, Object>... resources) {
+		// Call super constructor
 		super(e);
+		// Loads the fxml
 		FXMLLoader loader = new FXMLLoader(fxml);
 		loader.setController(this);
 		loader.setRoot(rootSupplier.get());
 		loader.setResources(new ObjectResourceBundle(resources));
+		// Add the loaded value to the children
 		try {
 			this.getChildren().add(loader.<ROOT>load());
 		} catch (IOException ex) {
 			Logger.getLogger(FXRootSkinBase.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
+	// Create an object resource bundle in the case of loading resources
 	private static class ObjectResourceBundle extends ResourceBundle {
+		// Create a map
 		private Map<String, Object> map = new HashMap<>();
-		
+
+		// Turn pairs to map
 		public ObjectResourceBundle(Pair<String, Object>[] pairs) {
 			for (Pair<String, Object> pair : pairs)
 				map.put(pair.getKey(), pair.getValue());
 		}
-		
+
+		// Override values
 		@Override
 		protected Object handleGetObject(String key) {
 			return map.get(key);
@@ -68,6 +60,6 @@ public abstract class FXRootSkinBase<E extends Control, ROOT extends Node> exten
 		public Enumeration<String> getKeys() {
 			return Collections.enumeration(map.keySet());
 		}
-		
+
 	}
 }

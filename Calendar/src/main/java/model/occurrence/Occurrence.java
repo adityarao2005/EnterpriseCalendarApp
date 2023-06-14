@@ -10,8 +10,10 @@ import model.events.Appearable;
 public abstract class Occurrence implements Serializable, Appearable {
 	private static final long serialVersionUID = 1L;
 
+	// fields
 	private LocalTime time;
 
+	// constructors
 	public Occurrence() {
 		super();
 	}
@@ -21,6 +23,7 @@ public abstract class Occurrence implements Serializable, Appearable {
 		this.time = time;
 	}
 
+	// Getters and setters
 	public LocalTime getTime() {
 		return time;
 	}
@@ -29,6 +32,7 @@ public abstract class Occurrence implements Serializable, Appearable {
 		this.time = time;
 	}
 
+	// Helper methods
 	@Override
 	public int hashCode() {
 		return Objects.hash(time);

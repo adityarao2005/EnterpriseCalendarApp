@@ -29,7 +29,10 @@ import model.events.REvent;
 import model.events.RTask;
 import model.events.Reminder;
 
+// Represents a modal for receiving an event from a form - Rendered in OOP structure in both here and FXML
 public class EventModalController implements DialogController<Reminder>, Initializable {
+	// Fields
+	// Loaded using Dependancy Injection
 	@FXML
 	private ComboBox<String> typeCombo;
 	@FXML
@@ -42,12 +45,15 @@ public class EventModalController implements DialogController<Reminder>, Initial
 	private BorderPane eventSpecBox;
 	private EventSpecController controller;
 
+	// Data for the sub controllers
 	private Reminder reminder;
 	private Object[] otherData;
 
+	// Constructor
 	public EventModalController() {
 	}
 
+	// Overloaded constructor
 	public EventModalController(Reminder reminder, Object... otherData) {
 		this.reminder = reminder;
 		this.otherData = otherData;
@@ -88,8 +94,11 @@ public class EventModalController implements DialogController<Reminder>, Initial
 			}
 
 			// Auto fill name and reminder time
-			nameField.setText(reminder.getName());
-			reminderSpinner.getValueFactory().setValue(reminder.getReminder());
+			if (reminder.getName() != null)
+				nameField.setText(reminder.getName());
+			
+			if (reminder.getReminder() != null)
+				reminderSpinner.getValueFactory().setValue(reminder.getReminder());
 
 			// Disable type and calendars
 			typeCombo.setDisable(true);
@@ -98,11 +107,14 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		}
 	}
 
+	// Return the reminder object
 	@Override
 	public Reminder getResult() {
 
+		// Create a list of errors
 		List<String> errors = new ArrayList<>();
 
+		// Create the reminder
 		Reminder reminder = controller.createReminder(errors);
 
 		// Set the calendar
@@ -113,12 +125,14 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		// Set the calendar
 		reminder.setName(nameField.getText());
 
-		if (reminder.getName().trim().isEmpty())
+		// If the name is null or the name is empty
+		if (reminder.getName() == null ||reminder.getName().trim().isEmpty())
 			errors.add("Name cannot be empty");
 
 		// Set the reminder
 		reminder.setReminder(reminderSpinner.getValue());
 
+		// If the reminder
 		if (reminder.getReminder() == null)
 			errors.add("Reminder Time cannot be null/empty");
 
@@ -128,17 +142,22 @@ public class EventModalController implements DialogController<Reminder>, Initial
 			return null;
 		}
 
+		// Return the reminder
 		return reminder;
 	}
 
+	// When the combobox is clicked and a new item is selected, run this
 	@SuppressWarnings("unchecked")
 	@FXML
 	private void selectedType() {
 
+		// Load the rest of the event modals
 		FXMLLoader loader = new FXMLLoader();
 		loader.setRoot(new VBox());
 
+		// Go through the selected item of the combobox
 		switch (typeCombo.getSelectionModel().getSelectedItem()) {
+		// If its reminder, set the location of the view and add controller
 		case "REMINDER": {
 			loader.setLocation(this.getClass().getResource("/view/event-modal/ReminderModalView.fxml"));
 
@@ -152,6 +171,7 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 			break;
 		}
+		// If its task, set location of view and add controller (and add other data required)
 		case "TASK": {
 			loader.setLocation(this.getClass().getResource("/view/event-modal/TaskModalView.fxml"));
 
@@ -165,6 +185,7 @@ public class EventModalController implements DialogController<Reminder>, Initial
 
 			break;
 		}
+		// If its assignment, then set location of view and add controller
 		case "ASSIGNMENT": {
 			loader.setLocation(this.getClass().getResource("/view/event-modal/AssignmentModalView.fxml"));
 
@@ -180,12 +201,14 @@ public class EventModalController implements DialogController<Reminder>, Initial
 		}
 		}
 
+		// Set the center of the borderpane as whatever is loaded from the fxml
 		try {
 			eventSpecBox.setCenter(loader.load());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		// Get the controller
 		controller = loader.getController();
 	}
 

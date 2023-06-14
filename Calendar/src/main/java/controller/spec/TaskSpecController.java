@@ -15,7 +15,10 @@ import model.events.RCalendar;
 import model.events.RTask;
 import model.events.Reminder;
 
+// Task Specialization - Controls the tasks
 public class TaskSpecController implements EventSpecController {
+	// Fields
+	// FXML CDI dependancy injection
 	@FXML
 	private Spinner<LocalTime> startTimeSpinner;
 
@@ -25,9 +28,11 @@ public class TaskSpecController implements EventSpecController {
 	@FXML
 	private DatePicker datePicker;
 
+	// Reminders and other tasks
 	private RTask reminder;
 	private List<RTask> otherTasks;
 
+	// Constructors
 	public TaskSpecController() {
 	}
 
@@ -36,9 +41,11 @@ public class TaskSpecController implements EventSpecController {
 		this.otherTasks = otherTasks;
 	}
 
+	// Initialize method
 	@FXML
 	private void initialize() {
 
+		// If there is a reminder then set the values
 		if (reminder != null) {
 			startTimeSpinner.getValueFactory().setValue(reminder.getFrom());
 			endTimeSpinner.getValueFactory().setValue(reminder.getTo());
@@ -46,14 +53,18 @@ public class TaskSpecController implements EventSpecController {
 		}
 	}
 
+	// Create the task
 	@Override
 	public Reminder createReminder(List<String> errors) {
+		// Create a task
 		RTask task = new RTask();
 
+		// Set values
 		task.setFrom(startTimeSpinner.getValue());
 		task.setTo(endTimeSpinner.getValue());
 		task.setDate(datePicker.getValue());
 
+		// Validation check
 		if (!task.getFrom().isBefore(task.getTo())) {
 			errors.add("The start time must be before the end time");
 			return task;
@@ -65,7 +76,7 @@ public class TaskSpecController implements EventSpecController {
 
 		// Get the list of tasks
 		List<RTask> tasks = Stream.concat(
-				// 
+				// Create a tasks list
 				totalReminders.stream().filter(e -> e instanceof Assignment).map(e -> ((Assignment) e).getSchedule())
 						.flatMap(List::stream),
 				Stream.concat(totalReminders.stream().filter(e -> e instanceof RTask).map(e -> (RTask) e),

@@ -8,14 +8,18 @@ import java.util.Objects;
 import javafx.scene.paint.Color;
 import model.Analogous;
 
+// Represents a calendar which has a collection of events
 public class RCalendar implements Serializable, Analogous<RCalendar> {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private String name;
 	private List<Reminder> reminders = new ArrayList<>();
 	private boolean classroomLoaded;
+	// Removes serializability
 	private transient Color color;
 
+	// Constructors
 	public RCalendar() {
 		super();
 	}
@@ -24,6 +28,7 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 		this.name = name;
 	}
 
+	// Getters and setters
 	public String getName() {
 		return name;
 	}
@@ -48,6 +53,15 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 		this.classroomLoaded = classroomLoaded;
 	}
 
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	// Helper methods
 	public boolean identical(RCalendar calendar) {
 		return calendar.name.equals(name);
 	}
@@ -73,14 +87,6 @@ public class RCalendar implements Serializable, Analogous<RCalendar> {
 		RCalendar other = (RCalendar) obj;
 		return classroomLoaded == other.classroomLoaded && Objects.equals(name, other.name)
 				&& Objects.equals(reminders, other.reminders);
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
 	}
 
 }

@@ -24,6 +24,7 @@ public abstract class Reminder implements Serializable, Appearable {
 		this.reminder = reminder;
 	}
 
+	// Copy method
 	public void from(Reminder reminder) {
 		this.name = reminder.name;
 		this.reminder = reminder.reminder;

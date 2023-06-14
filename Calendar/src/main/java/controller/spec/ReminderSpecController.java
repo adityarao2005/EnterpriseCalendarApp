@@ -24,6 +24,7 @@ import model.occurrence.WeeklyOccurrence;
 import model.occurrence.YearlyOccurrence;
 import view.controls.EnumCheckBoxCallback;
 
+// Reminder specialization - Controls reminder portion of the EventModalController
 public class ReminderSpecController implements EventSpecController {
 	// FX DEFINES
 	// Daily occurrence tab
@@ -64,8 +65,10 @@ public class ReminderSpecController implements EventSpecController {
 	@FXML
 	private BorderPane container;
 
+	// Reminder
 	private REvent reminder;
 
+	// Constructors
 	public ReminderSpecController() {
 	}
 
@@ -73,10 +76,13 @@ public class ReminderSpecController implements EventSpecController {
 		this.reminder = reminder;
 	}
 
+	// Initialize method
 	@FXML
 	private void initialize() {
+		// Select the first value of the combobox
 		frequencyCombo.getSelectionModel().select(0);
 
+		// Call select Frequency
 		selectFreq();
 
 		// Auto fill event if event is provided
@@ -128,6 +134,7 @@ public class ReminderSpecController implements EventSpecController {
 		}
 	}
 
+	// Sets the base for the occurrence
 	@FXML
 	private void selectFreq() {
 		// Get the right hbox
@@ -146,11 +153,14 @@ public class ReminderSpecController implements EventSpecController {
 		container.setCenter(hbox);
 	}
 
+	// Creates the reminder
 	@Override
 	public Reminder createReminder(List<String> errors) {
 
+		// Declare and initialize
 		REvent event = new REvent();
 
+		// Based on the occurrence type, set the occurrence
 		event.setOccurence(switch (frequencyCombo.getSelectionModel().getSelectedItem()) {
 		case "DAILY" -> new DailyOccurrence(timeSpinner.getValue());
 		case "WEEKLY" -> {
@@ -185,6 +195,7 @@ public class ReminderSpecController implements EventSpecController {
 				"Unexpected value: " + frequencyCombo.getSelectionModel().getSelectedItem());
 		});
 
+		// Return occurrence
 		return event;
 	}
 

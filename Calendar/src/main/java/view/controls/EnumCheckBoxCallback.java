@@ -28,6 +28,7 @@ public class EnumCheckBoxCallback<T extends Enum<T>> implements Callback<T, Obse
 			// Create a boolean property which handles the delegation
 			SimpleBooleanProperty observable = new SimpleBooleanProperty();
 
+			// Add the listener
 			observable.addListener((obs, wasSelected, isNowSelected) -> {
 				if (isNowSelected)
 					enums.add(param);

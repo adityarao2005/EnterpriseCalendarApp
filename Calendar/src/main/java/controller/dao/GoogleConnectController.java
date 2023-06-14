@@ -31,7 +31,7 @@ import com.google.api.services.classroom.model.StudentSubmission;
 import model.User;
 import model.User.GoogleProfile;
 
-// Handles Google authentication
+// Handles Google authentication and usage of google classroom api
 public class GoogleConnectController {
 	// A bunch of useful constants
 	private static final String APPLICATION_NAME = "ICS Calendar App";
@@ -46,19 +46,12 @@ public class GoogleConnectController {
 	// Create the HTTP Transport layer
 	private static final NetHttpTransport HTTP_TRANSPORT;
 
-	static {
-
-		try {
-			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-	}
-
 	// Static initializer, when the class is created
 	static {
 		try {
+			// create a new httptransport
+			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
 			// Load google client secrets
 			InputStream in = GoogleConnectController.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 
@@ -122,7 +115,7 @@ public class GoogleConnectController {
 	// List courses
 	public static List<Course> listCourses(User user) throws IOException {
 
-		// List the first 10 courses that the user has access to.
+		// List the courses that the user has access to.
 		ListCoursesResponse response = user.getProfile().getClassroom().courses().list().execute();
 
 		return response.getCourses();
@@ -131,7 +124,7 @@ public class GoogleConnectController {
 	// list course work
 	public static List<CourseWork> listCourseWork(User user, Course course) throws IOException {
 
-		// List the first 10 courses that the user has access to.
+		// List the courses that the user has access to.
 		ListCourseWorkResponse response = user.getProfile().getClassroom().courses().courseWork().list(course.getId())
 				.execute();
 
@@ -141,7 +134,7 @@ public class GoogleConnectController {
 	// List student submissions
 	public static List<StudentSubmission> listStudentSubmission(User user, CourseWork work) throws IOException {
 
-		// List the first 10 courses that the user has access to.
+		// List the courses that the user has access to.
 		ListStudentSubmissionsResponse response = user.getProfile().getClassroom().courses().courseWork()
 				.studentSubmissions().list(work.getCourseId(), work.getId()).setUserId("me").execute();
 

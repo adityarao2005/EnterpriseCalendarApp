@@ -40,6 +40,7 @@ import view.controls.CheckBoxDS;
 import view.controls.Scheduler;
 import view.controls.UCalendar;
 
+// Controls the Home/Main View
 public class HomeController {
 	// Fields
 
@@ -74,13 +75,16 @@ public class HomeController {
 	// Calendars view list
 	private ObservableList<CheckBoxDS<RCalendar>> oCalendars;
 
+	// Colours for calendars, to differentiate which events come from which calendar
 	private static final Color[] COLOURS = new Color[] { Color.RED, Color.CYAN, Color.YELLOW, Color.GREEN };
 
+	// Calls refresh on init
 	@FXML
 	private void initialize() {
 		onRefresh();
 	}
 
+	// Shows the calendar list
 	private void showCalendarList() {
 		// Create the change event for the calendar list listener
 		ListChangeListener<CheckBoxDS<RCalendar>> changeEvent = event -> {
@@ -130,12 +134,14 @@ public class HomeController {
 		calendars.setItems(oCalendars);
 	}
 
+	// Shows todo list
 	private void showWorkTodoList() {
 		// Set the items
 		todoList.setItems(FXCollections.observableList(CalendarManifestController.getUncompletedTasks(user)));
 
 		// Set the sell factory so that it acts as a wrapper for the tasks
 		todoList.setCellFactory(CheckBoxListCell.forListView(e -> {
+			// Create a wrapper for the completed variable of the tasks
 			return new SimpleBooleanProperty() {
 
 				@Override
@@ -180,6 +186,7 @@ public class HomeController {
 
 	}
 
+	// Show the assignment list
 	private void showAssignmentList() {
 		// Set the items
 		unscheduledAssignmentsList
@@ -191,13 +198,17 @@ public class HomeController {
 		completedAssignmentsList
 				.setItems(FXCollections.observableList(CalendarManifestController.getCompletedAssignments(user)));
 
+		// Create a list cell callback function as a cellfactory
 		final Callback<ListView<Assignment>, ListCell<Assignment>> ASSIGNMENT_CALLBACK = lv -> {
 
+			// Create the cell and override its original implementation
 			ListCell<Assignment> cell = new ListCell<>() {
 				@Override
 				public void updateItem(Assignment item, boolean empty) {
+					// Call super method
 					super.updateItem(item, empty);
 
+					// set item
 					setText(item == null || empty ? "" : item.getName());
 
 					// Set the background
@@ -211,13 +222,15 @@ public class HomeController {
 				}
 			};
 
+			// Return the cell
 			return cell;
 		};
 
+		// Set cell factories
 		assignmentsList.setCellFactory(ASSIGNMENT_CALLBACK);
 
 		completedAssignmentsList.setCellFactory(ASSIGNMENT_CALLBACK);
-		// Set the cell factory
+
 		unscheduledAssignmentsList.setCellFactory(lv -> {
 			// Create a new list cell where instead of performing the toString on load, itll
 			// keep its name instead
@@ -253,10 +266,12 @@ public class HomeController {
 			// Add a listener to the empty property so that when the listcell is not empty,
 			// we would show the popup menu
 			cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+				// If the cell is empty, remove the context menu
 				if (isNowEmpty) {
 					cell.setContextMenu(null);
 				} else {
 
+					// Otherwise set the text of the content menu to the task name and add context menu
 					editItem.setText(String.format("Schedule Tasks for %s", cell.getItem().getName()));
 
 					cell.setContextMenu(contextMenu);
@@ -268,6 +283,7 @@ public class HomeController {
 		});
 	}
 
+	// Action for logout
 	@FXML
 	private void logoutAction() {
 
@@ -276,6 +292,7 @@ public class HomeController {
 		Application.getApplication().navigate("/view/WelcomeView.fxml", "Welcome");
 	}
 
+	// Action for exit
 	@FXML
 	private void exitAction() {
 		// Exit the application
@@ -285,14 +302,17 @@ public class HomeController {
 		System.exit(0);
 	}
 
+	// When the date is selected from the calendar control, run this
 	@FXML
 	private void dateSelected() {
 
+		// Delegate this to UI thread but not immediately
 		Platform.runLater(() -> {
-			// Get the list of tasks
+			// Get the list of reminders
 			List<Reminder> tasks = oCalendars.stream().filter(CheckBoxDS::getChecked).map(CheckBoxDS::getValue)
 					.map(RCalendar::getReminders).flatMap(List::stream).toList();
 
+			// Get the total amount of tasks from the calendars and assignments
 			List<Reminder> totalTasks = Stream
 					.concat(tasks.stream(), tasks.stream().filter(e -> e instanceof Assignment)
 							.map(e -> ((Assignment) e).getSchedule()).flatMap(List::stream))
@@ -301,14 +321,14 @@ public class HomeController {
 			// Set the reminders
 			List<Reminder> reminders = totalTasks.stream().filter(e -> e.occursOn(dayChooser.getCurrentDate()))
 					.toList();
-			System.out.println(dayChooser.getCurrentDate());
-			System.out.println(reminders);
 
+			// Clear and add reminders list
 			schedule.getReminder().clear();
 			schedule.getReminder().addAll(reminders);
 		});
 	}
 
+	// Show popup dialog for creation of a task
 	@FXML
 	private void onCreateTask() {
 		// Get an instance from a modal
@@ -319,9 +339,11 @@ public class HomeController {
 			reminder.getCalendar().getReminders().add(reminder);
 		}
 
+		// Refresh the users screen
 		onRefresh();
 	}
 
+	// Show popup dialog for management of task
 	@FXML
 	private void onManage() {
 		// Show a dialog
@@ -331,6 +353,7 @@ public class HomeController {
 		onRefresh();
 	}
 
+	// Show text input dialog for creation of a new calendar
 	@FXML
 	private void onCreateCal() {
 		// Create a text input dialog
@@ -348,9 +371,11 @@ public class HomeController {
 			user.getCalendars().add(new RCalendar(name));
 		}
 
+		// Refresh the GUI
 		onRefresh();
 	}
 
+	// Refreshes GUI and user models
 	@FXML
 	private void onRefresh() {
 		// Get the current user
@@ -383,6 +408,7 @@ public class HomeController {
 		dateSelected();
 	}
 
+	// Sign in with google
 	@FXML
 	private void signInWithGoogle() {
 		// Create a google user
@@ -392,15 +418,18 @@ public class HomeController {
 			throw new RuntimeException(e);
 		}
 
+		// Refresh the GUI
 		onRefresh();
 	}
 
+	// Show work on tasks dialog
 	@FXML
 	private void workOnTasks() {
 
 		// Show a dialog
 		Application.getApplication().dialog("/view/Pomodoro.fxml", "Lets Work!");
 
+		// Refresh the GUI
 		onRefresh();
 	}
 

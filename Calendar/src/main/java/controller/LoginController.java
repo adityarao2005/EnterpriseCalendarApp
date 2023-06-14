@@ -23,6 +23,7 @@ public class LoginController {
 	@FXML
 	private PasswordField passwordField;
 
+	// Initializes the field
 	@FXML
 	private void initialize() {
 		// Auto fill user id fields

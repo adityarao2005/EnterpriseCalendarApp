@@ -131,6 +131,7 @@ public class User implements Serializable {
 		this.calendars = calendars;
 	}
 
+	// Helper methods
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", name=" + name + ", password=" + password + ", profile=" + profile

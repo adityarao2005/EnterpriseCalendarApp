@@ -4,11 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+// Represents something which occurs every month
 public class MonthlyOccurrence extends Occurrence {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private int dayOfMonth;
 
+	// Constructors
 	public MonthlyOccurrence() {
 		super();
 	}
@@ -18,6 +21,7 @@ public class MonthlyOccurrence extends Occurrence {
 		this.dayOfMonth = dayOfMonth;
 	}
 
+	// Getters and setters
 	public int getDayOfMonth() {
 		return dayOfMonth;
 	}
@@ -26,6 +30,7 @@ public class MonthlyOccurrence extends Occurrence {
 		this.dayOfMonth = dayOfMonth;
 	}
 
+	// Helper methods
 	@Override
 	public int hashCode() {
 		final int prime = 31;

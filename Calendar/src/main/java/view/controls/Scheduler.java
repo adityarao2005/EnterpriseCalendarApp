@@ -9,8 +9,10 @@ import javafx.scene.control.Skin;
 import model.events.Reminder;
 import view.controls.skin.SchedulerSkin;
 
+// Scheduler which maps the tasks in the schedule
 public final class Scheduler extends Control {
 
+	// fields
 	private final ObjectProperty<ObservableList<Reminder>> reminder = new SimpleObjectProperty<>(this, "reminder",
 			FXCollections.observableArrayList());
 
@@ -26,6 +28,7 @@ public final class Scheduler extends Control {
 		reminderProperty().set(reminder);
 	}
 
+	// Create the default skin
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new SchedulerSkin(this);

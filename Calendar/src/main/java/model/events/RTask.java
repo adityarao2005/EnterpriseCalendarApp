@@ -5,15 +5,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+// Represents a tasks
 public class RTask extends CompleteableReminder {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private LocalTime from;
 	private LocalTime to;
 	private LocalDate date;
 	private boolean skipped;
 	private Assignment assignment;
 
+	// Constructors
 	public RTask() {
 		super();
 	}
@@ -27,6 +30,7 @@ public class RTask extends CompleteableReminder {
 		this.skipped = skipped;
 	}
 
+	// Copy method
 	@Override
 	public void from(Reminder reminder) {
 		super.from(reminder);
@@ -39,6 +43,7 @@ public class RTask extends CompleteableReminder {
 		this.assignment = assignment.assignment;
 	}
 
+	// Getters and Setters
 	public LocalTime getFrom() {
 		return from;
 	}
@@ -71,6 +76,7 @@ public class RTask extends CompleteableReminder {
 		this.skipped = skipped;
 	}
 
+	// Helper methods
 	@Override
 	public LocalDateTime finishBy() {
 		return LocalDateTime.of(date, to);

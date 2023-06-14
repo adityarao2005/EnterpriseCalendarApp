@@ -4,11 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+// Represents an occurrance which only happens once in a lifetime
 public class OnlyOccurrence extends Occurrence {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private LocalDate date;
 
+	// Constructors
 	public OnlyOccurrence() {
 		super();
 	}
@@ -18,6 +21,7 @@ public class OnlyOccurrence extends Occurrence {
 		this.date = date;
 	}
 
+	// Getters and Setters
 	public LocalDate getDate() {
 		return date;
 	}
@@ -26,6 +30,7 @@ public class OnlyOccurrence extends Occurrence {
 		this.date = date;
 	}
 
+	// Helper methods
 	@Override
 	public int hashCode() {
 		final int prime = 31;

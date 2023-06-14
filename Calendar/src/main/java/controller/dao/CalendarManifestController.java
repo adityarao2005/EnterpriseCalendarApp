@@ -19,8 +19,10 @@ import model.events.RCalendar;
 import model.events.RTask;
 import model.events.Reminder;
 
+// Controller for working with the user and accessing calendar and reminder related procedures
 public class CalendarManifestController {
 
+	// Refresh the calendars from the google classrooom
 	public static void refreshGoogleCalendars(User user) throws IOException {
 
 		// Get the list of courses from the user
@@ -67,13 +69,16 @@ public class CalendarManifestController {
 				assignment.setName(work.getTitle());
 				assignment.setSchedule(new ArrayList<>());
 
+				// Get the submissions
 				List<StudentSubmission> submissions = GoogleConnectController.listStudentSubmission(user, work);
 
+				// If there are no submissions, set it as not completed
 				if (submissions.isEmpty()) {
 
 					assignment.setCompleted(false);
 				} else {
 
+					// Otherwise get the submission and check its state
 					StudentSubmission submission = submissions.get(0);
 
 					assignment.setCompleted(submission.getState().equals("TURNED_IN"));
@@ -88,6 +93,7 @@ public class CalendarManifestController {
 
 	}
 
+	// Get the uncompleted tasks
 	public static List<RTask> getUncompletedTasks(User user) {
 		// Create a container list
 		List<RTask> tasks = new ArrayList<>();
@@ -121,26 +127,32 @@ public class CalendarManifestController {
 		return tasks;
 	}
 
+	// Get the unscheduled assignments
 	public static List<Assignment> getUnattendedAssignments(User user) {
+		// Use streams to perform filter on demand
 		return getUncompletedAssignments(user).stream().filter(assignment -> assignment.getSchedule().isEmpty())
 				.toList();
 
 	}
 
+	// Get scheduled assignments
 	public static List<Assignment> getScheduledAssignments(User user) {
 		return getUncompletedAssignments(user).stream().filter(assignment -> !assignment.getSchedule().isEmpty())
 				.toList();
 
 	}
 
+	// Get uncomplete assignments
 	public static List<Assignment> getUncompletedAssignments(User user) {
 		return getAssignments(user).stream().filter(Predicate.not(Assignment::isCompleted)).toList();
 	}
 
+	// Get complete assignments
 	public static List<Assignment> getCompletedAssignments(User user) {
 		return getAssignments(user).stream().filter(Assignment::isCompleted).toList();
 	}
 
+	// Get the total number of assignments from the user
 	public static List<Assignment> getAssignments(User user) {
 		// Create a container list
 		List<Assignment> tasks = new ArrayList<>();

@@ -7,22 +7,16 @@ import java.util.Locale;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.util.converter.LocalTimeStringConverter;
 
-/**
- * A Spinner Value Factory for getting the Time
- * 
- * @author Raos
- *
- */
+// A value factory for localtime
 public class TimeSpinnerValueFactory extends SpinnerValueFactory<LocalTime> {
 
-	/**
-	 * Constructs the Spinnner Value Factory
-	 */
+	// Constructor
 	public TimeSpinnerValueFactory() {
 		this.setConverter(new LocalTimeStringConverter(FormatStyle.SHORT));
 		this.setValue(LocalTime.now());
 	}
 
+	// Decrement method
 	@Override
 	public void decrement(int steps) {
 		if (getValue() == null)
@@ -33,6 +27,7 @@ public class TimeSpinnerValueFactory extends SpinnerValueFactory<LocalTime> {
 		}
 	}
 
+	// Increment method
 	@Override
 	public void increment(int steps) {
 		if (this.getValue() == null)

@@ -17,13 +17,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import view.controls.UCalendar;
 
-/**
- * The Default Skin of the Calendar object
- * 
- * @author Raos
- */
+// The Default Skin of the Calendar object
 public class UCalendarSkin extends FXRootSkinBase<UCalendar, BorderPane> {
 
+	// Fields
+	// FXML Dependancy Injectioon
 	@FXML
 	private GridPane calendarGrid;
 	@FXML
@@ -38,24 +36,20 @@ public class UCalendarSkin extends FXRootSkinBase<UCalendar, BorderPane> {
 	private Label year;
 	@FXML
 	private Button yearRight;
+
+	// Buttons array
 	private Button[][] buttons;
 	private SimpleObjectProperty<YearMonth> yearMonth;
 
-	/**
-	 * @param calendar - the Calendar object defaulted by the SkinBase class
-	 */
+	// Constructor to load view
 	public UCalendarSkin(UCalendar calendar) {
 		super(calendar, UCalendarSkin.class.getResource("/view/controls/CalendarView.fxml"), BorderPane::new);
 	}
 
-	/**
-	 * Initializes the controller class.
-	 *
-	 * @param url
-	 * @param rb
-	 */
+	// Initializes the controller class.
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		// Yearmonth property
 		yearMonth = new SimpleObjectProperty<>();
 		// anchor pane for each button row and column
 		buttons = new Button[6][7];
@@ -63,41 +57,45 @@ public class UCalendarSkin extends FXRootSkinBase<UCalendar, BorderPane> {
 		// multidimensional array
 		for (int row = 0; row < buttons.length; row++) {
 			for (int column = 0; column < buttons[row].length; column++) {
+				// Creates an anchorpane
 				AnchorPane anchor = new AnchorPane();
 
+				// Hold the buttons in the anchor pane
 				buttons[row][column] = new Button();
+				// Set layout args
 				AnchorPane.setBottomAnchor(buttons[row][column], 0.0);
 				AnchorPane.setTopAnchor(buttons[row][column], 0.0);
 				AnchorPane.setLeftAnchor(buttons[row][column], 0.0);
 				AnchorPane.setRightAnchor(buttons[row][column], 0.0);
 
+				// Set action
 				buttons[row][column].setOnAction(e -> {
 					Button button = (Button) e.getTarget();
 					this.getSkinnable().setCurrentDate((LocalDate) button.getUserData());
 					this.getSkinnable().fireEvent(new ActionEvent(button, this.getSkinnable()));
 				});
 
+				// Add buttons to anchorpane and add anchorpane to grid
 				anchor.getChildren().add(buttons[row][column]);
 				calendarGrid.add(anchor, column, row + 2);
 			}
 		}
 
+		// Set the yearMonth as the current yearmonth
 		yearMonth.set(YearMonth.from(LocalDate.now()));
 
+		// Add listener to the yearmonth
 		yearMonth.addListener(this::refreshBasedOnYearMonth);
 
+		// Add listener to the current date property
 		this.getSkinnable().currentDateProperty().addListener(l -> {
 			yearMonth.set(YearMonth.from(this.getSkinnable().getCurrentDate()));
 		});
+		// Set the current date as now
 		this.getSkinnable().setCurrentDate(LocalDate.now());
 	}
 
-	/**
-	 * Utility method, can be used for anything but kept here for it's own purpose
-	 * 
-	 * @param init - original string
-	 * @return the string in camel case
-	 */
+	// Utility method, can be used for anything but kept here for it's own purpose
 	public static String toCamelCase(final String init) {
 		if (init == null) {
 			return null;
@@ -171,16 +169,12 @@ public class UCalendarSkin extends FXRootSkinBase<UCalendar, BorderPane> {
 		}
 	}
 
-	/**
-	 * DayOfWeek enum to Canadian/US/European standard
-	 * 
-	 * @param week
-	 * @return
-	 */
+	// DayOfWeek enum to Canadian/US/European standard
 	private int fromDayOfTheWeek(DayOfWeek week) {
 		return week.getValue() % 7;
 	}
 
+	// Action when month buttons are pressed
 	@FXML
 	private void onMonthPressed(ActionEvent event) {
 		// month presses
@@ -191,6 +185,7 @@ public class UCalendarSkin extends FXRootSkinBase<UCalendar, BorderPane> {
 		}
 	}
 
+	// Action when year buttons are pressed
 	@FXML
 	private void onYearPressed(ActionEvent event) {
 		// month presses

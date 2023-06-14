@@ -34,101 +34,139 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import model.events.RTask;
 
+// Pomodoro controller - Controls the pomodoro dialog and functionality to help the user in managing their work time
 public class PomodoroController implements DialogController<String> {
+	// Fields
+	// FXMLloader Dependancy Injection
+	
+	// Screens
 	@FXML
 	private AnchorPane finishedScreen;
 
 	@FXML
 	private AnchorPane workingScreen;
 
+	// Main time label
 	@FXML
 	private Label timeLabel;
 
+	// Container for the screens
 	@FXML
 	private BorderPane container;
 
+	// Spinners for the durtaion of the work and break
 	@FXML
 	private Spinner<Integer> workDuration;
 
 	@FXML
 	private Spinner<Integer> breakDuration;
 
+	// Main dialog pane to access button
 	@FXML
 	private DialogPane dialogPane;
 
+	// Close button type
 	@FXML
 	private ButtonType closeButton;
 
+	// Listview items
 	@FXML
 	private ListView<RTask> pendingList;
 	@FXML
 	private ListView<RTask> completedList;
 
+	// Title label
 	@FXML
 	private Label titleLabel;
 
+	// Close button node
 	private Node closeButtonNode;
 
+	// Boolean flag to see if we are on a break or not
 	private boolean working;
+	// Duration time for the work time and break time - effectively final
 	private int workDurationTime;
 	private int breakDurationTime;
+	// Tasks list - bound to the items
 	private ObservableList<RTask> tasks;
+	// Properties
 	private ObjectProperty<RTask> currentTask = new SimpleObjectProperty<>();
 	private ObjectProperty<Duration> durationProperty = new SimpleObjectProperty<>(Duration.ZERO);
 	private ObjectProperty<Duration> elapsedDuration = new SimpleObjectProperty<>(Duration.ZERO);
 
+	// Timer
 	private Timeline timer;
 
+	// Initializes the view
 	@FXML
 	private void initialize() {
+		// Get the close button from buttontype
 		closeButtonNode = dialogPane.lookupButton(closeButton);
 
+		// Get the uncompleted tasks
 		tasks = FXCollections.observableList(
 				CalendarManifestController.getUncompletedTasks(Application.getApplication().getCurrentUser()));
+		// set the items to the tasks
 		pendingList.setItems(tasks);
 
+		// Create a cell factory
 		Callback<ListView<RTask>, ListCell<RTask>> cellFactory = lv -> {
+			// Return the list cell
 			return new ListCell<>() {
 
+				// Override super implementation of update item
 				@Override
 				public void updateItem(RTask item, boolean empty) {
+					// Call super method
 					super.updateItem(item, empty);
 
+					// If item is empty set text to blank text
 					if (item == null || empty) {
 						setText("");
 					} else {
 
+						// Declare a value String
 						String value = null;
 
+						// Initialize the value based on whether it is linked to an assignment
 						if (item.getAssignment() != null)
 							value = item.getName() + " - " + item.getAssignment().getName();
 						else
 							value = item.getName();
 
+						// Set the text
 						setText(value);
 					}
 				}
 			};
 		};
 
+		// Set the cell factory
 		pendingList.setCellFactory(cellFactory);
 		completedList.setCellFactory(cellFactory);
 
+		// Create the timer
 		timer = new Timeline(new KeyFrame(javafx.util.Duration.seconds(1), event -> updateTime()));
 		timer.setCycleCount(Animation.INDEFINITE);
 	}
 
+	// Stops working on tasks
 	@FXML
 	private void stopAction() {
+		// stop the timer
 		timer.stop();
 
+		// close the dialog
 		closeButtonNode.fireEvent(new ActionEvent(closeButtonNode, closeButtonNode));
 	}
 
+	// Skip the current event
 	@FXML
 	private void skipAction() {
+		// Stop timer
 		timer.stop();
 
+		// Skip
 		if (working) {
 			// Get the next task if available
 			currentTask.set(tasks.get(1));
@@ -137,16 +175,19 @@ public class PomodoroController implements DialogController<String> {
 
 		}
 
+		// Perform next action
 		performNextAction();
 
 	}
 
+	// Finish the current task
 	@FXML
 	private void finishAction() {
 
 		// Stop the timer
 		timer.stop();
 
+		// If we are working, get the task, set completed, remove from list, and get new current task
 		if (working) {
 			working = false;
 
@@ -157,6 +198,7 @@ public class PomodoroController implements DialogController<String> {
 
 		} else {
 
+			// Otherwise skip
 			working = true;
 		}
 
@@ -164,35 +206,45 @@ public class PomodoroController implements DialogController<String> {
 		performNextAction();
 	}
 
+	// When the begin button is pressed
 	@FXML
 	private void onBegin() {
+		// Disable the close button
 		closeButtonNode.setDisable(true);
 
+		// Set the working screen as the center
 		container.setCenter(workingScreen);
 
+		// Begin work
 		working = true;
 		workDurationTime = workDuration.getValue();
 		breakDurationTime = breakDuration.getValue();
 
+		// Bind the duration to the timer label
 		Bindings.bindBidirectional(timeLabel.textProperty(), durationProperty, new StringConverter<>() {
 
+			// To string format
 			@Override
 			public String toString(Duration object) {
 				return String.format("%02d:%02d", object.toMinutesPart(), object.toSecondsPart());
 			}
 
+			// Regex for the from strign
 			@Override
 			public Duration fromString(String string) {
 				// Get the duration from string
 				int minute = 0;
 				int second = 0;
 
+				// Use regex to find the pattern
 				Matcher m = Pattern.compile("([0-9]*)[:]([0-9]*)").matcher(string);
-
 				m.find();
+				
+				// Get the values
 				minute = Integer.parseInt(m.group(0));
 				second = Integer.parseInt(m.group(1));
 
+				// Create the duration
 				return Duration.ofSeconds(minute * 60 + second);
 			}
 		});
@@ -204,21 +256,25 @@ public class PomodoroController implements DialogController<String> {
 		// Get the first task and set as current task
 		currentTask.set(tasks.get(0));
 
+		// Perform the next action
 		performNextAction();
 	}
 
+	// Performs the next action
 	private void performNextAction() {
 		// If we are working
 		if (working) {
 			// Get the values of the duration
 			durationProperty.set(PomodoroController.min(Duration.ofMinutes(workDurationTime), elapsedDuration.get()));
 
+			// Set the text
 			titleLabel.setText("Keep working! You are doing great!");
 
 		} else {
 			// Otherwise set the break time
 			durationProperty.set(Duration.ofMinutes(breakDurationTime));
 
+			// set the text
 			titleLabel.setText("Take a break for a few minutes!");
 
 		}
@@ -227,11 +283,13 @@ public class PomodoroController implements DialogController<String> {
 		timer.play();
 	}
 
+	// Only needed because we dont want the user to exit
 	@Override
 	public String getResult() {
 		return "ok'd";
 	}
 
+	// Callback feature for the tick event
 	private void updateTime() {
 		// Set time
 		durationProperty.set(durationProperty.get().minusSeconds(1));
@@ -315,7 +373,9 @@ public class PomodoroController implements DialogController<String> {
 		}
 	}
 
+	// Helper method for getting minumum duration
 	public static Duration min(Duration a, Duration b) {
+		// Compare and return the greater
 		if (a.compareTo(b) < 0)
 			return a;
 

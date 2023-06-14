@@ -5,12 +5,15 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.Objects;
 
+// represents something which occurs yearly
 public class YearlyOccurrence extends Occurrence {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private int dayOfMonth;
 	private Month month;
 
+	// constructors
 	public YearlyOccurrence() {
 		super();
 	}
@@ -21,6 +24,7 @@ public class YearlyOccurrence extends Occurrence {
 		this.month = month;
 	}
 
+	// Getters and Setters
 	public int getDayOfMonth() {
 		return dayOfMonth;
 	}
@@ -37,6 +41,7 @@ public class YearlyOccurrence extends Occurrence {
 		this.month = month;
 	}
 
+	// Helper methods
 	@Override
 	public int hashCode() {
 		final int prime = 31;

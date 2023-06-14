@@ -8,12 +8,15 @@ import java.util.Objects;
 
 import model.Analogous;
 
+// Represents an assignment, a task with multiple subtasks, main implementation for google classroom
 public class Assignment extends CompleteableReminder implements Analogous<Assignment> {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private LocalDateTime due;
 	private List<RTask> schedule;
 
+	// Constructor
 	public Assignment() {
 		super();
 	}
@@ -29,6 +32,7 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		this.schedule = schedule;
 	}
 
+	// Copy method
 	@Override
 	public void from(Reminder reminder) {
 		super.from(reminder);
@@ -39,6 +43,7 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		this.schedule = assignment.schedule;
 	}
 
+	// Getters and Setters
 	public LocalDateTime getDue() {
 		return due;
 	}
@@ -55,21 +60,26 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		this.schedule = schedule;
 	}
 
+	// Helper methods
+	// Check whether identical
 	@Override
 	public boolean identical(Assignment other) {
 		return this.getName().equals(other.getName());
 	}
 
+	// Get when finished
 	@Override
 	public LocalDateTime finishBy() {
 		return due;
 	}
 
+	// To string
 	@Override
 	public String toString() {
 		return String.format("%s, due=%s, schedule=%s", super.toString(), due, schedule);
 	}
 
+	// hashcode
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,6 +88,7 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		return result;
 	}
 
+	// equals method
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -90,6 +101,7 @@ public class Assignment extends CompleteableReminder implements Analogous<Assign
 		return Objects.equals(due, other.due) && Objects.equals(schedule, other.schedule);
 	}
 
+	// Occurs and appears
 	@Override
 	public boolean occursOn(LocalDate date) {
 		return due.toLocalDate().equals(date);

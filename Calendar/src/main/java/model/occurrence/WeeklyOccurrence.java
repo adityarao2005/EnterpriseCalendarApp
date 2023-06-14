@@ -6,11 +6,14 @@ import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.Objects;
 
+// Represents something which runs more than once a week
 public class WeeklyOccurrence extends Occurrence {
 	private static final long serialVersionUID = 1L;
 
+	// Fields
 	private EnumSet<DayOfWeek> daysOfWeek;
 
+	// Constructors
 	public WeeklyOccurrence() {
 		super();
 	}
@@ -20,6 +23,7 @@ public class WeeklyOccurrence extends Occurrence {
 		this.daysOfWeek = daysOfWeek;
 	}
 
+	// Getters and Setters
 	public EnumSet<DayOfWeek> getDaysOfWeek() {
 		return daysOfWeek;
 	}
@@ -28,6 +32,7 @@ public class WeeklyOccurrence extends Occurrence {
 		this.daysOfWeek = daysOfWeek;
 	}
 
+	// Helper methods
 	@Override
 	public int hashCode() {
 		final int prime = 31;

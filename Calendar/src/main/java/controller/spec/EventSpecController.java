@@ -6,8 +6,10 @@ import application.Application;
 import controller.EventModalController;
 import model.events.Reminder;
 
+// Interface for all Event Specializations
 public interface EventSpecController {
 
+	// Creates the reminder
 	public Reminder createReminder(List<String> errors);
 
 	// Utility method to create a task
